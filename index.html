@@ -11,6 +11,14 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #e6ffe6; /* Light green background */
+        }
+        #app-root {
+            background-color: #e6ffe6; /* Solid light green background */
+        }
+        /* Ensure main content area also has the same background */
+        #main-content {
+            background-color: #e6ffe6; /* Consistent light green background */
         }
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out;
@@ -24,44 +32,211 @@
             height: 300px; /* Default height for charts */
             width: 100%;
         }
+        /* Custom scrollbar for horizontal features */
+        .horizontal-scroll-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Custom modal for search suggestions */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2.5rem; /* Increased padding */
+            border-radius: 1.25rem; /* More rounded */
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+            width: 90%;
+            max-width: 700px; /* Wider modal */
+            max-height: 90vh; /* Taller modal */
+            overflow-y: auto;
+            position: relative;
+            border: 2px solid #34d399; /* Green border */
+        }
+
+        /* Game-like button styles */
+        .game-button {
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-radius: 0.75rem; /* Consistent rounded corners */
+        }
+        .game-button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .game-button:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Card styles for a more game-like feel */
+        .game-card {
+            background-color: #ffffff;
+            border-radius: 1.25rem; /* More rounded */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08); /* Deeper shadow */
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #e2e8f0; /* Subtle border */
+        }
+        .game-card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Homepage Hero Section - Reverted to simpler styling */
+        .hero-section {
+            background-color: #34d399; /* A solid green for the hero */
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            padding: 4rem 2rem;
+            border-radius: 1.25rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            min-height: 80vh; /* Make hero section larger */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Styles for horizontal auto-scroll */
+        .auto-scroll-container {
+            overflow-x: auto;
+            white-space: nowrap; /* Prevents items from wrapping */
+            scroll-behavior: smooth; /* Smooth scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .auto-scroll-item {
+            display: inline-block; /* Makes items arrange horizontally */
+            margin-right: 1.5rem; /* Spacing between items */
+            vertical-align: top; /* Align items at the top */
+            width: 300px; /* Fixed width for each item */
+            flex-shrink: 0; /* Prevent items from shrinking */
+        }
+
+        /* Sticky sidebar */
+        #sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh; /* Make sidebar take full viewport height */
+            overflow-y: auto; /* Enable scrolling for sidebar content if it overflows */
+            /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        /* Hide scrollbar track and thumb for WebKit browsers */
+        #sidebar::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
-    <div id="app-root" class="flex h-screen">
-        <!-- Sidebar will be dynamically managed -->
-        <aside id="sidebar" class="bg-slate-100 border-r border-slate-200 p-6 flex-shrink-0 flex flex-col justify-between shadow-lg transition-all duration-300 ease-in-out w-64">
-            <div>
-                <div class="flex items-center gap-3 mb-4"> <!-- Reduced mb-10 to mb-4 to make space for the toggle button -->
-                    <div class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md">
-                        <span class="text-white text-2xl">🌱</span>
-                    </div>
-                    <h1 id="greenmo-title" class="text-2xl font-bold text-slate-900">GreenMo</h1>
-                </div>
-                <!-- Toggle Sidebar Button - Now inside the sidebar, below the logo/title -->
-                <button id="toggle-sidebar-btn" class="w-full text-left p-2 rounded-lg bg-emerald-500 text-white shadow-md hover:bg-emerald-600 transition-colors duration-300 mb-6 flex items-center justify-center gap-2">
-                    <!-- Icon and text will be dynamically set -->
-                </button>
-                <nav id="main-nav" class="flex flex-col gap-2">
-                    <!-- NavLinks will be dynamically generated -->
-                </nav>
-            </div>
-            <div class="border-t border-slate-200 pt-4">
-                <label for="user-selector" class="block text-sm font-medium text-slate-500 mb-2">Simulated User</label>
-                <select id="user-selector" class="w-full bg-white border border-slate-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                    <option value="user123">Jane Doe</option>
-                    <option value="user456">John Smith</option>
-                    <option value="user789">Alex Ray</option>
-                </select>
-            </div>
-        </aside>
+    <!-- Main application container, now using flex-col for top bar + content area -->
+    <div id="app-root" class="flex flex-col h-screen">
 
-        <!-- Main Content Area -->
-        <main id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300 ease-in-out">
-            <!-- Page content will be rendered here -->
-        </main>
+        <!-- Top Navigation Bar -->
+        <header class="flex items-center justify-between p-4 bg-white shadow-lg z-10 flex-shrink-0 border-b-2 border-emerald-200">
+            <!-- Search Bar -->
+            <div class="relative flex-1 max-w-md mr-4">
+                <input type="text" id="search-input" placeholder="Search..." class="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent game-button">
+                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <!-- Search Icon (Lucide) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                </span>
+            </div>
+
+            <!-- Right-aligned Icons (Notifications, Settings, Profile) -->
+            <div class="flex items-center space-x-4">
+                <!-- Notifications Button -->
+                <button class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 game-button" title="Notifications">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+                </button>
+                <!-- Settings Button -->
+                <button class="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 game-button" title="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 00-2.73.73l-.78 1.28a2 2 0 00.73 2.73l.15.08a2 2 0 011 1.73v.44a2 2 0 002 2v.18a2 2 0 011 1.73l.43.25a2 2 0 012 0l.15-.08a2 2 0 002.73.73l.78 1.28a2 2 0 00-.73 2.73l-.15.08a2 2 0 011 1.73v.44a2 2 0 002 2h.44a2 2 0 002-2v-.18a2 2 0 011-1.73l.43-.25a2 2 0 012 0l.15.08a2 2 0 002.73-.73l.78-1.28a2 2 0 00-.73-2.73l-.15-.08a2 2 0 01-1-1.73V4a2 2 0 00-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+                <!-- Profile Button -->
+                <button id="profile-btn" class="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200 game-button" title="Profile">
+                    <img id="profile-avatar" src="https://placehold.co/32x32/E0F2F7/000000?text=JD" alt="Profile" class="w-8 h-8 rounded-full border border-gray-300">
+                    <span id="profile-name" class="font-semibold text-slate-700">Jane Doe</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area (Sidebar + Main Content) -->
+        <div class="flex flex-1">
+            <!-- Sidebar will be dynamically managed -->
+            <aside id="sidebar" class="bg-gradient-to-b from-emerald-700 to-emerald-900 border-r border-emerald-950 p-6 flex-shrink-0 flex flex-col justify-between shadow-2xl transition-all duration-300 ease-in-out w-64 text-white">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 bg-emerald-400 rounded-lg flex items-center justify-center shadow-md">
+                            <span class="text-white text-2xl">🌱</span>
+                        </div>
+                        <h1 id="greenmo-title" class="text-2xl font-bold text-white">GreenMo</h1>
+                    </div>
+                    <!-- Toggle Sidebar Button -->
+                    <button id="toggle-sidebar-btn" class="w-full text-left p-2 rounded-lg bg-emerald-600 text-white shadow-md hover:bg-emerald-700 transition-colors duration-300 mb-6 flex items-center justify-center gap-2 game-button">
+                        <!-- Icon and text will be dynamically set -->
+                    </button>
+
+                    <!-- Simulated User Selector - Moved here -->
+                    <div class="mb-6">
+                        <label for="user-selector" class="block text-sm font-medium text-emerald-200 mb-2">Simulated User</label>
+                        <select id="user-selector" class="w-full bg-emerald-800 text-white border border-emerald-700 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-400 focus:border-emerald-400 game-button">
+                            <option value="user123">Jane Doe</option>
+                            <option value="user456">John Smith</option>
+                            <option value="user789">Alex Ray</option>
+                        </select>
+                    </div>
+
+                    <nav id="main-nav" class="flex flex-col gap-2">
+                        <!-- NavLinks will be dynamically generated -->
+                    </nav>
+                </div>
+                <!-- The user selector was here previously, now moved up -->
+            </aside>
+
+            <!-- Main Content Area -->
+            <main id="main-content" class="flex-1 p-8 overflow-y-auto transition-all duration-300 ease-in-out">
+                <!-- Page content will be rendered here -->
+            </main>
+        </div>
 
         <!-- Toast Container -->
         <div id="toast-container"></div>
+
+        <!-- Search Suggestions Modal -->
+        <div id="search-suggestions-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <button id="close-search-suggestions-modal-btn" class="absolute top-4 right-4 p-2 rounded-full bg-red-500 text-white hover:bg-red-600 game-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+                <h3 class="text-3xl font-bold text-slate-900 mb-6 text-center">Hot Deals & Promotions</h3>
+                <div id="promotions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Promotions will be dynamically loaded here -->
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -74,7 +249,9 @@
         let currentMatchingItemIndex = 0;
         let showInfoModal = false;
         let currentLeaderboardSubView = 'organization';
-        let currentLanguage = 'en'; // Changed: Default language is now English
+        let currentLanguage = 'en'; // Default language is now English
+        let showRedeemPointsModal = false; // New: State for Redeem Points modal
+        let currentEcoPointsSubView = 'activities'; // New: Default sub-view for Eco-Points page
 
         // Chart instances for CarbonTrackerPage
         let carbonLineChartInstance = null;
@@ -88,6 +265,9 @@
         let isWasteScanned = false; // New: for waste sorting step 1
         let currentWasteType = null; // New: for identified waste type
 
+        // Global variable for auto-scrolling interval
+        let autoScrollInterval = null;
+
         // Mock data
         let mockData = {
             users: {
@@ -97,7 +277,8 @@
                     co2Savings: 120.5,
                     lastScanDateReusable: null, // New: for reusable items
                     reusableScansToday: 0,     // New: for reusable items
-                    walkingCyclingDistanceKm: 0
+                    walkingCyclingDistanceKm: 0,
+                    avatar: 'https://placehold.co/32x32/E0F2F7/000000?text=JD'
                 },
                 'user456': {
                     name: 'John Smith',
@@ -105,7 +286,8 @@
                     co2Savings: 88.2,
                     lastScanDateReusable: null,
                     reusableScansToday: 0,
-                    walkingCyclingDistanceKm: 0
+                    walkingCyclingDistanceKm: 0,
+                    avatar: 'https://placehold.co/32x32/D1FAE5/065F46?text=JS'
                 },
                 'user789': {
                     name: 'Alex Ray',
@@ -113,7 +295,8 @@
                     co2Savings: 155.1,
                     lastScanDateReusable: null,
                     reusableScansToday: 0,
-                    walkingCyclingDistanceKm: 0
+                    walkingCyclingDistanceKm: 0,
+                    avatar: 'https://placehold.co/32x32/A7F3D0/065F46?text=AR'
                 },
             },
             organization: {
@@ -121,9 +304,9 @@
                 greenBadges: 5, // Changed to 5 for user123 to unlock premium
                 premiumAccess: false,
                 premiumReports: [ // New: Premium report data
-                    { id: 1, title: 'Annual Carbon Footprint Report', brief: 'Detailed analysis of your organization\'s yearly carbon emissions and reduction efforts.', price: '$99.99' },
-                    { id: 2, title: 'Quarterly Sustainability Impact', brief: 'Overview of environmental impact metrics and sustainability initiatives per quarter.', price: '$49.99' },
-                    { id: 3, title: 'Employee Green Engagement Analysis', brief: 'Insights into employee participation in green activities and eco-point earnings.', price: '$79.99' }
+                    { id: 1, title: 'Annual Carbon Footprint Report', brief: 'Detailed analysis of your organization\'s yearly carbon emissions and reduction efforts.', price: '$99.99', purpose: 'Provides a comprehensive overview of your organization\'s carbon emissions over a year, identifying key areas for reduction and compliance.' },
+                    { id: 2, title: 'Quarterly Sustainability Impact', brief: 'Overview of environmental impact metrics and sustainability initiatives per quarter.', price: '$49.99', purpose: 'Offers a snapshot of your environmental performance and progress on sustainability goals every quarter, aiding in timely adjustments.' },
+                    { id: 3, title: 'Employee Green Engagement Analysis', brief: 'Insights into employee participation in green activities and eco-point earnings.', price: '$79.99', purpose: 'Analyzes employee involvement in eco-friendly activities, helping to boost internal sustainability culture and participation rates.' }
                 ]
             },
             dashboardMetrics: {
@@ -255,15 +438,38 @@
                 }
             },
             redemptionOptions: [
-                { id: 1, name: '10% Discount Coupon', cost: 100, type: 'coupon' },
-                { id: 2, name: 'Eco-friendly Water Bottle', cost: 250, type: 'product' },
-                { id: 3, name: 'Reusable Shopping Bag', cost: 150, type: 'product' },
-                { id: 4, name: 'Donation to Reforestation (1 Tree)', cost: 500, type: 'donation' },
-                { id: 5, name: 'Organic Produce Voucher ($10)', cost: 300, type: 'voucher' },
-                { id: 6, name: 'Public Transport Pass (1 Day)', cost: 400, type: 'voucher' },
-                { id: 7, name: 'Recycled Notebook Set', cost: 200, type: 'product' },
-                { id: 8, name: 'Carbon Offset Credit (100kg CO2)', cost: 700, type: 'donation' },
-            ]
+                { id: 1, name: '10% Discount Coupon', cost: 100, type: 'coupon', img: 'https://placehold.co/150x100/FFD700/000000?text=Coupon' },
+                { id: 2, name: 'Eco-friendly Water Bottle', cost: 250, type: 'product', img: 'https://placehold.co/150x100/87CEEB/000000?text=Bottle' },
+                { id: 3, name: 'Reusable Shopping Bag', cost: 150, type: 'product', img: 'https://placehold.co/150x100/90EE90/000000?text=Bag' },
+                { id: 4, name: 'Tree Planting Donation (1 tree)', cost: 500, type: 'donation', img: 'https://placehold.co/150x100/228B22/FFFFFF?text=Tree' },
+                { id: 5, name: 'Organic Produce Voucher ($10)', cost: 300, type: 'voucher', img: 'https://placehold.co/150x100/FF6347/FFFFFF?text=Voucher' },
+                { id: 6, name: '1-Day Bus Pass', cost: 400, type: 'voucher', img: 'https://placehold.co/150x100/6A5ACD/FFFFFF?text=Bus' },
+                { id: 7, name: 'Recycled Notebook Set', cost: 200, type: 'product', img: 'https://placehold.co/150x100/DDA0DD/000000?text=Notebook' },
+                { id: 8, name: 'Carbon Offset Credit (100kg CO2)', cost: 700, type: 'donation', img: 'https://placehold.co/150x100/B0E0E6/000000?text=Carbon' },
+            ],
+            promotions: [
+                { id: 1, title: 'Jollibee Month-End Deal', description: 'Crispy Chicken Deal for only 99K', image: 'https://placehold.co/150x100/FF6347/FFFFFF?text=Jollibee', views: '4,316 views' },
+                { id: 2, title: 'Transfer & Get Rewards', description: 'Guaranteed to receive XU when transferring...', image: 'https://placehold.co/150x100/FFD700/000000?text=Transfer', views: '8,274 views' },
+                { id: 3, title: 'FPT Shop Offer', description: '3.1% Cashback from FPT Shop', image: 'https://placehold.co/150x100/00BFFF/FFFFFF?text=FPT', views: '2,618 views' },
+                { id: 4, title: 'Great Drinks - Saigon Cafe', description: '15% off up to 40K', image: 'https://placehold.co/150x100/8B4513/FFFFFF?text=Cafe', views: '1,200 views' },
+                { id: 5, title: 'Great Drinks - Robusta Honey', description: '30% off up to 30K', image: 'https://placehold.co/150x100/D2B48C/000000?text=Robusta', views: '950 views' },
+            ],
+            dailyChallenges: {
+                'user123': [
+                    { id: 1, title: 'Walk 2 KM', description: 'Complete a 2 KM walk today.', points: 80, completed: false, timeLeft: '12 hours' },
+                    { id: 2, title: 'Recycle 3 Plastic Bottles', description: 'Scan and recycle 3 plastic bottles.', points: 60, completed: false, timeLeft: '8 hours' },
+                    { id: 3, title: 'Use Reusable Cup (1 time)', description: 'Use your reusable cup once today.', points: 40, completed: true, timeLeft: 'Completed' },
+                    { id: 4, title: 'Plant a Virtual Tree', description: 'Simulate planting a virtual tree.', points: 100, completed: false, timeLeft: '24 hours' }
+                ],
+                'user456': [
+                    { id: 1, title: 'Cycle 5 KM', description: 'Complete a 5 KM cycle today.', points: 120, completed: false, timeLeft: '10 hours' },
+                    { id: 2, title: 'Sort Organic Waste', description: 'Scan and sort organic waste.', points: 50, completed: false, timeLeft: '6 hours' }
+                ],
+                'user789': [
+                    { id: 1, title: 'Use Public Transport (1 trip)', description: 'Simulate one trip using public transport.', points: 70, completed: false, timeLeft: '15 hours' },
+                    { id: 2, title: 'Donate Old Clothes', description: 'Simulate donating old clothes.', points: 90, completed: false, timeLeft: '20 hours' }
+                ]
+            }
         };
 
         // --- Helper Functions ---
@@ -279,17 +485,28 @@
                 'TrendingUp': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
                 'Trophy': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trophy"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6c.6 0 1 .4 1 1v4c0 .6-.4 1-1 1zm0 0V4m0 5h6m-6 0H2m10 0v4c0 .6-.4 1-1 1H9c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1h2.5a2.5 2.5 0 0 1 0 5H12c-.6 0-1-.4-1-1v-4c0-.6.4-1 1-1z"/><path d="M12 15v6"/><path d="M12 15H9.5c-.6 0-1 .4-1 1v4c0 .6.4 1 1 1H12c.6 0 1-.4 1-1v-4c0-.6-.4-1-1-1z"/><path d="M12 15h2.5c.6 0 1-.4 1-1v-4c0-.6-.4-1-1-1H12c-.6 0-1 .4-1 1v4c0 .6.4 1 1 1z"/></svg>`,
                 'ChevronDown': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="M6 9l6 6 6-6"/></svg>`,
-                'ChevronUp': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="M18 15l-6-6-6 6"/></svg>`,
-                'MessageSquare': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
-                'Menu': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>`,
-                'X': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`,
-                'CheckCircle': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
-                'Info': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`,
-                'Scan': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>`,
-                'Lock': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
-                'Unlock': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-unlock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`,
-                'BookOpen': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
-                'Walk': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-walk"><path d="M13 14h.01"/><path d="M10 20h4"/><path d="M14 17.5l1.5-2.5"/><path d="M10 17.5l-1.5-2.5"/><path d="M12 13V4"/><path d="M18 10c-1.5-1-2-3-2-3s1.5-2 2.5-3c1.5-1.5 2-1 2-1s.2 1.2-.6 2.3c-.9 1.2-2.4 2.7-3.4 3.7"/><path d="M6 10c1.5-1 2-3 2-3s-1.5-2-2.5-3c-1.5-1.5-2-1-2-1s-.2 1.2.6 2.3c.9 1.2 2.4 2.7 3.4 3.7"/></svg>`
+                'ChevronUp': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up"><path d="M18 15l-6-6-6 6"/></svg>`,
+                'MessageSquare': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+                'Menu': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>`,
+                'X': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`,
+                'CheckCircle': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>`,
+                'Info': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`,
+                'Scan': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>`,
+                'Lock': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`,
+                'Unlock': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucude-unlock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>`,
+                'BookOpen': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+                'Walk': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-walk"><path d="M13 14h.01"/><path d="M10 20h4"/><path d="M14 17.5l1.5-2.5"/><path d="M10 17.5l-1.5-2.5"/><path d="M12 13V4"/><path d="M18 10c-1.5-1-2-3-2-3s1.5-2 2.5-3c1.5-1.5 2-1 2-1s.2 1.2-.6 2.3c-.9 1.2-2.4 2.7-3.4 3.7"/><path d="M6 10c1.5-1 2-3 2-3s-1.5-2-2.5-3c-1.5-1.5-2-1-2-1s-.2 1.2.6 2.3c.9 1.2 2.4 2.7 3.4 3.7"/></svg>`,
+                'Gift': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v-4H5v4"/><path d="M7 8V5a3 3 0 0 1 6 0v3"/><path d="M17 8V5a3 3 0 0 0-6 0v3"/></svg>`,
+                'ShoppingBag': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag"><path d="M6 2L3 7v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7l-3-5Z"/><path d="M3 7h18"/><path d="M16 10a2 2 0 0 1-4 0 2 2 0 0 1-4 0"/></svg>`,
+                'Utensils': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-utensils"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2h-4a2 2 0 0 0-2 2v11"/><path d="M17 15v7"/></svg>`,
+                'DollarSign': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+                'CalendarCheck': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-check"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="m10 16 2 2 4-4"/></svg>`,
+                'Target': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-target"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+                'Eye': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>`,
+                'Users2': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users-2"><path d="M14 19a6 6 0 0 0-12 0"/><circle cx="8" cy="9" r="4"/><path d="M22 19a6 6 0 0 0-12 0"/><circle cx="16" cy="9" r="4"/></svg>`,
+                'TreePine': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tree-pine"><path d="M10 19V3L2 8l8 4"/><path d="M14 19V3L22 8l-8 4"/></svg>`,
+                'Trash2': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>`,
+                'Zap': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`
             };
             return icons[iconName] || '';
         }
@@ -322,10 +539,10 @@
 
         function renderNavLink(pageName, iconSvg, text) {
             const isActive = pageName === currentPage;
-            const activeClass = isActive ? 'bg-emerald-100 text-emerald-800 font-semibold' : 'text-slate-600 hover:bg-slate-200 hover:text-slate-900 font-medium';
+            const activeClass = isActive ? 'bg-emerald-600 text-white font-semibold shadow-inner' : 'text-emerald-200 hover:bg-emerald-700 hover:text-white font-medium';
             const sidebarClass = isSidebarOpen ? '' : 'justify-center px-0';
             return `
-                <button data-page="${pageName}" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${activeClass} ${sidebarClass}">
+                <button data-page="${pageName}" class="nav-link flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${activeClass} ${sidebarClass} game-button">
                     ${iconSvg}
                     ${isSidebarOpen ? text : ''}
                 </button>
@@ -337,7 +554,7 @@
             const toggleButton = document.getElementById('toggle-sidebar-btn');
             const nav = document.getElementById('main-nav');
             const greenmoTitle = document.getElementById('greenmo-title');
-            const userSelectorContainer = sidebar.querySelector('.border-t.border-slate-200.pt-4');
+            const userSelectorContainer = sidebar.querySelector('label[for="user-selector"]').parentNode; // Get parent div of user selector
 
             // Ensure elements exist before manipulating them
             if (!sidebar || !toggleButton || !nav || !greenmoTitle || !userSelectorContainer) {
@@ -350,7 +567,7 @@
                 sidebar.classList.add('w-64');
                 greenmoTitle.classList.remove('hidden');
                 toggleButton.innerHTML = `
-                    ${getLucideIcon('X', 24, 'white')}
+                    ${getLucideIcon('X', 24, 'white')} Close Menu
                 `;
                 userSelectorContainer.style.display = 'block';
             } else {
@@ -368,6 +585,7 @@
                 ${renderNavLink('home', '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>', 'Home')}
                 ${renderNavLink('dashboard', '<svg xmlns="http://www.w3.org/2000/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>', 'Dashboard')}
                 ${renderNavLink('points', '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>', 'Eco-Points System')}
+                ${renderNavLink('redeem', getLucideIcon('Gift', 20), 'Redeem Points')}
                 ${renderNavLink('carbon', '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>', 'Carbon Tracker')}
                 ${renderNavLink('trading', '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>', 'Trading Hub')}
                 ${renderNavLink('volunteer', '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>', 'Volunteer Hub')}
@@ -391,8 +609,14 @@
                 walkingCyclingInterval = null;
                 isWalkingTrackingActive = false; // Reset tracking state
             }
+            // Stop auto-scrolling when navigating away from home
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
             renderPageContent();
             updateSidebar(); // Update sidebar active state
+            updateProfileInfo(); // Update profile info in top bar
         }
 
         function toggleSidebar() {
@@ -408,7 +632,26 @@
                 walkingCyclingInterval = null;
                 isWalkingTrackingActive = false; // Reset tracking state
             }
+            // Stop auto-scrolling when changing user (as it re-renders the page)
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+                autoScrollInterval = null;
+            }
             renderPageContent(); // Re-render current page with new user data
+            updateProfileInfo(); // Update profile info in top bar
+        }
+
+        // Function to update profile information in the top bar
+        function updateProfileInfo() {
+            const user = mockData.users[currentUser];
+            const profileNameElement = document.getElementById('profile-name');
+            const profileAvatarElement = document.getElementById('profile-avatar');
+
+            if (profileNameElement && profileAvatarElement) {
+                profileNameElement.textContent = user.name;
+                profileAvatarElement.src = user.avatar;
+                profileAvatarElement.alt = `Profile of ${user.name}`;
+            }
         }
 
         // --- HomePage ---
@@ -416,214 +659,228 @@
             const mainContent = document.getElementById('main-content');
             const featureCardsData = [
                 {
-                    icon: getLucideIcon('QrCode', 48, '#1A5319'),
-                    alt: 'Carbon Tracking',
-                    title: 'Carbon Tracking & Eco-Points',
-                    description: 'Track your green activities (walking, waste sorting) or pay for eco-friendly products to monitor carbon savings and earn reward points.',
-                    color: 'text-emerald-700',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>',
+                    title: 'Eco-Points System',
+                    description: 'Track your green activities and earn reward points.',
                     targetPage: 'points'
                 },
                 {
-                    icon: getLucideIcon('Users', 48, '#1A5319'),
-                    alt: 'Volunteer Hub',
-                    title: 'Volunteer Hub',
-                    description: 'Participate in local clean-up events and tree planting to earn reward points and make a positive contribution to the community.',
-                    color: 'text-blue-700',
-                    targetPage: 'volunteer'
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
+                    title: 'Carbon Tracker',
+                    description: 'Visualize your positive environmental impact.',
+                    targetPage: 'carbon'
                 },
                 {
-                    icon: getLucideIcon('Recycle', 48, '#1A5319'),
-                    alt: 'Trading Hub',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>',
                     title: 'Trading Hub',
-                    description: 'Exchange pre-loved items or use Eco-Points to redeem used items from users near you, fostering a circular economy.',
-                    color: 'text-purple-700',
+                    description: 'Exchange pre-loved items with other users.',
                     targetPage: 'trading'
                 },
                 {
-                    icon: getLucideIcon('Award', 48, '#1A5319'),
-                    alt: 'Leaderboard',
-                    title: 'Leaderboard & Green Badges',
-                    description: 'Your green efforts will help your company climb the leaderboard and earn prestigious Green Badge titles.',
-                    color: 'text-yellow-700',
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>',
+                    title: 'Volunteer Hub',
+                    description: 'Participate in local environmental events.',
+                    targetPage: 'volunteer'
+                },
+                {
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>',
+                    title: 'Leaderboard',
+                    description: 'See your ranking and compete with others.',
                     targetPage: 'leaderboard'
                 },
                 {
-                    icon: getLucideIcon('TrendingUp', 48, '#1A5319'),
-                    alt: 'Premium Report',
-                    title: 'Premium Carbon Reports for SMEs',
-                    description: 'A paid feature that provides businesses with valuable reports on their carbon emissions and sustainability impact.',
-                    color: 'text-red-700',
-                    targetPage: 'carbon'
-                },
+                    icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-emerald-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253" /></svg>',
+                    title: 'Instructions',
+                    description: 'Learn how to use GreenMo effectively.',
+                    targetPage: 'instructions'
+                }
             ];
 
-            let featureCardsHtml = featureCardsData.map((item, index) => `
-                <div data-page="${item.targetPage}" class="relative flex flex-col items-center p-6 bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 cursor-pointer text-center overflow-hidden w-full max-w-md border border-gray-100">
-                    <div class="mb-4 p-4 rounded-full bg-emerald-50 shadow-md ${item.color}">
-                        ${item.icon}
-                    </div>
-                    <h4 class="text-2xl font-bold mb-2 ${item.color}">${item.title}</h4>
-                    <p class="text-slate-700 text-sm md:text-base homepage-description" style="max-height: 0; opacity: 0; overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.3s ease-out;">
-                        ${item.description}
-                    </p>
-                    <button class="absolute bottom-2 right-2 p-2 rounded-full bg-gray-100 shadow-sm hover:bg-gray-200 transition-colors duration-200 text-slate-600 toggle-description-btn">
-                        ${getLucideIcon('ChevronDown', 20)}
-                    </button>
+            let featureCardsHtml = featureCardsData.map(item => `
+                <div data-page="${item.targetPage}" class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center text-center transform hover:scale-105 transition-transform duration-200 cursor-pointer border border-gray-100 game-card auto-scroll-item">
+                    ${item.icon}
+                    <h3 class="text-xl font-semibold text-slate-800 mb-2">${item.title}</h3>
+                    <p class="text-slate-600 text-sm">${item.description}</p>
                 </div>
-                ${index < featureCardsData.length - 1 ? `
-                    <div class="relative w-0.5 h-16 bg-slate-300">
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-emerald-500 rounded-full border-2 border-white shadow-sm"></div>
-                    </div>
-                ` : ''}
             `).join('');
 
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
-                    <header class="mb-12 text-center">
-                        <h2 class="text-5xl font-extrabold text-slate-900 leading-tight transition-all duration-300 ease-in-out hover:text-emerald-600 hover:scale-105"
-                            style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
-                            Welcome to GreenMo
-                        </h2>
-                        <p class="text-xl text-slate-600 mt-4 max-w-3xl mx-auto">
-                            An innovative super-app ecosystem within MoMo that incentivizes individuals and SMEs to embrace sustainable habits, reduce carbon footprints, and foster economic growth in cities.
-                        </p>
-                    </header>
+                <div class="max-w-6xl mx-auto">
+                    <!-- Hero Section -->
+                    <div class="hero-section">
+                        <h2 class="text-5xl font-extrabold mb-4">Welcome to GreenMo!</h2>
+                        <p class="text-xl font-medium mb-8">Earn Green Points, Save the Planet – One Tap at a Time</p>
+                        <button id="get-started-btn" class="bg-white text-emerald-600 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-emerald-50 transition-colors duration-300 game-button">
+                            Get Started Now
+                        </button>
+                    </div>
 
-                    <section class="mb-12 p-8 bg-gray-50 rounded-2xl shadow-inner border border-gray-200">
-                        <h3 class="text-3xl font-bold text-slate-900 mb-4 text-center transition-all duration-300 ease-in-out hover:text-emerald-600 hover:scale-105"
-                            style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">
-                            Vision & Mission
-                        </h3>
-                        <p class="text-lg text-slate-700 leading-relaxed max-w-4xl mx-auto">
-                            GreenMo is a super-app ecosystem within MoMo that incentivizes both individuals and SMEs to adopt sustainable habits through gamification, rewards, and community-driven circular economy solutions. Our mission is to make sustainability accessible, rewarding, and impactful for everyone.
-                        </p>
-                    </section>
-
-                    <section class="mb-12">
-                        <h3 class="text-3xl font-bold text-slate-900 mb-8 text-center transition-all duration-300 ease-in-out hover:text-emerald-600 hover:scale-105"
-                            style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);">
-                            The GreenMo Ecosystem
-                        </h3>
-                        <div class="flex flex-col lg:flex-row justify-center items-center gap-8">
-                            <div class="w-full lg:w-1/3 p-6 bg-gray-50 rounded-2xl shadow-inner border border-gray-200 text-center">
-                                <h4 class="text-2xl font-bold text-emerald-700 mb-4">For Individuals (B2C)</h4>
-                                <ul class="space-y-3 text-lg text-slate-700 text-left mx-auto max-w-xs">
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">👣</span><span>Carbon Footprint Tracking</span></li>
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">✨</span><span>Eco-Points System</span></li>
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">🤝</span><span>Volunteer Activities</span></li>
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl"♻️</span><span>Trading Stuff</span></li>
-                                </ul>
+                    <!-- About GreenMo Section -->
+                    <div id="about-greenmo-section" class="bg-white p-8 md:p-12 rounded-2xl shadow-xl game-card mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">About GreenMo</h2>
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <div class="md:w-1/2 text-center md:text-left">
+                                <p class="text-slate-700 leading-relaxed mb-4">
+                                    GreenMo is a super-app ecosystem within MoMo that incentivizes both individuals and SMEs to adopt sustainable habits through gamification, rewards, and community-driven circular economy solutions.
+                                </p>
+                                <p class="text-slate-700 leading-relaxed mb-4">
+                                    Join us in making a difference, one green action at a time! Our platform connects you with a community committed to a greener future.
+                                </p>
                             </div>
-                            <div class="w-40 h-40 bg-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-xl text-white text-center text-xl font-bold">
-                                MoMo<br />Super-App
-                            </div>
-                            <div class="w-full lg:w-1/3 p-6 bg-gray-50 rounded-2xl shadow-inner border border-gray-200 text-center">
-                                <h4 class="text-2xl font-bold text-emerald-700 mb-4">For SMEs (B2B)</h4>
-                                <ul class="space-y-3 text-lg text-slate-700 text-left mx-auto max-w-xs">
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">🏆</span><span>Employee Leaderboard</span></li>
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">📊</span><span>Carbon Dashboard & Reports</span></li>
-                                    <li class="flex items-start gap-2"><span class="text-emerald-600 text-xl">🔗</span><span>Circular Marketplace</span></li>
-                                </ul>
+                            <div class="md:w-1/2 flex justify-center items-center">
+                                <span class="text-emerald-600 text-9xl">🌱</span>
                             </div>
                         </div>
-                        <p class="text-sm text-slate-500 mt-8 text-center">Bridged by Social Incentives, Corporate Partnerships, & Government Tie-ins</p>
-                    </section>
+                    </div>
 
-                    <section class="mb-12 p-8 bg-white rounded-2xl shadow-xl border border-slate-200">
-                        <h3 class="text-3xl font-bold text-slate-900 mb-8 text-center">Discover GreenMo Features</h3>
-                        <div class="flex flex-col items-center space-y-8">
+                    <!-- Mission & Vision Section -->
+                    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl game-card mb-8">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-6 text-center">Our Mission & Vision</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="flex flex-col items-center text-center p-4 rounded-lg bg-emerald-50 border border-emerald-200 game-card">
+                                ${getLucideIcon('Target', 48, '#059669')}
+                                <h3 class="text-2xl font-semibold text-emerald-700 mt-3 mb-2">Our Mission</h3>
+                                <p class="text-slate-700 leading-relaxed">
+                                    To empower individuals and organizations to adopt sustainable practices by providing an engaging platform that rewards eco-friendly actions, fosters community, and drives positive environmental change.
+                                </p>
+                            </div>
+                            <div class="flex flex-col items-center text-center p-4 rounded-lg bg-emerald-50 border border-emerald-200 game-card">
+                                ${getLucideIcon('Eye', 48, '#059669')}
+                                <h3 class="text-2xl font-semibold text-emerald-700 mt-3 mb-2">Our Vision</h3>
+                                <p class="text-slate-700 leading-relaxed">
+                                    To create a greener, healthier planet where environmental stewardship is a collective effort, and every action, big or small, contributes to a sustainable future.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content Area with Feature Cards -->
+                    <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl game-card">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-8 text-center">Explore Our Features</h2>
+                        <div id="features-scroll-container" class="auto-scroll-container flex gap-6 pb-4">
                             ${featureCardsHtml}
                         </div>
-                    </section>
+                    </div>
                 </div>
             `;
 
-            // Attach event listeners for feature cards and their toggle buttons
-            mainContent.querySelectorAll('.relative.flex.flex-col.items-center').forEach(card => {
+            // Attach event listeners for feature cards
+            mainContent.querySelectorAll('.bg-white.p-6.rounded-xl').forEach(card => {
                 card.onclick = (e) => {
                     const targetPage = e.currentTarget.dataset.page;
                     if (targetPage) {
                         navigateTo(targetPage);
                     }
                 };
-                const toggleBtn = card.querySelector('.toggle-description-btn');
-                const descriptionEl = card.querySelector('.homepage-description');
-                let isExpanded = false;
-
-                toggleBtn.onclick = (e) => {
-                    e.stopPropagation(); // Prevent card click event from firing
-                    isExpanded = !isExpanded;
-                    if (isExpanded) {
-                        descriptionEl.style.maxHeight = `${descriptionEl.scrollHeight}px`;
-                        descriptionEl.style.opacity = '1';
-                        toggleBtn.innerHTML = getLucideIcon('ChevronUp', 20);
-                    } else {
-                        descriptionEl.style.maxHeight = '0';
-                        descriptionEl.style.opacity = '0';
-                        toggleBtn.innerHTML = getLucideIcon('ChevronDown', 20);
-                    }
-                };
             });
+
+            // Attach event listener for "Get Started Now" button
+            document.getElementById('get-started-btn').onclick = () => {
+                document.getElementById('about-greenmo-section').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            };
+
+            // Start auto-scrolling for features
+            startAutoScroll('features-scroll-container');
+        }
+
+        // Function to start automatic horizontal scrolling
+        function startAutoScroll(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Clear any existing interval to prevent multiple scrolls
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+            }
+
+            let scrollPosition = 0;
+            const scrollSpeed = 1; // Pixels per interval
+            const intervalTime = 20; // Milliseconds
+
+            const scroll = () => {
+                scrollPosition += scrollSpeed;
+                if (scrollPosition >= container.scrollWidth - container.clientWidth) {
+                    scrollPosition = 0; // Reset to start for continuous loop
+                }
+                container.scrollLeft = scrollPosition;
+            };
+
+            autoScrollInterval = setInterval(scroll, intervalTime);
+
+            // Pause on hover
+            container.onmouseover = () => clearInterval(autoScrollInterval);
+            container.onmouseout = () => {
+                if (!autoScrollInterval) { // Only restart if it was paused by hover
+                    autoScrollInterval = setInterval(scroll, intervalTime);
+                }
+            };
         }
 
         // --- DashboardPage ---
         let dashboardChartInstance = null; // To hold the Chart.js instance for Dashboard
+        let growthChartInstance = null; // To hold the Chart.js instance for Growth Chart
 
         function renderDashboardPage() {
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Ecosystem Dashboard</h2>
-                        <p class="text-lg text-slate-500 mt-1">A high-level overview of the GreenMo platform's impact and activity.</p>
+                        <p class="text-lg text-slate-500 mt-1">A high-level overview of GreenMo platform's impact and activities.</p>
                     </header>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                             <h3 class="font-semibold text-slate-500">Total Users</h3>
                             <p id="total-users" class="text-4xl font-bold text-emerald-600 mt-2">1,345</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                            <h3 class="font-semibold text-slate-500">CO2 Saved (Tonnes)</h3>
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                            <h3 class="font-semibold text-slate-500">CO2 Saved (Tons)</h3>
                             <p id="total-co2" class="text-4xl font-bold text-emerald-600 mt-2">15.7</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                             <h3 class="font-semibold text-slate-500">Items Traded</h3>
                             <p id="total-trades" class="text-4xl font-bold text-emerald-600 mt-2">4,812</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                             <h3 class="font-semibold text-slate-500">Volunteer Hours</h3>
                             <p id="total-hours" class="text-4xl font-bold text-emerald-600 mt-2">2,109</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center game-card">
                             <h3 class="font-semibold text-slate-500">Total Trees Planted</h3>
                             <p class="text-4xl font-bold text-emerald-600 mt-2">${mockData.dashboardMetrics.totalTreesPlanted.toLocaleString()}</p>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center">
-                            <h3 class="font-semibold text-slate-500">Total Waste Recycled (kg)</h3>
-                            <p class="text-4xl font-bold text-emerald-600 mt-2">${mockData.dashboardMetrics.totalWasteRecycledKg.toLocaleString()}</p>
-                        </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center game-card">
                             <h3 class="font-semibold text-slate-500">Clean Energy Generated (kWh)</h3>
                             <p class="text-4xl font-bold text-emerald-600 mt-2">${mockData.dashboardMetrics.cleanEnergyGeneratedKwh.toLocaleString()}</p>
                         </div>
                     </div>
 
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                         <h3 class="text-xl font-bold text-slate-900 mb-1">Activity Overview</h3>
-                        <p class="text-slate-500 mb-4">Combined activity across all features in the last 30 days.</p>
+                        <p class="text-slate-500 mb-4">Aggregated activity across all features over the last 30 days.</p>
                         <div class="chart-container">
                             <canvas id="activity-chart"></canvas>
                         </div>
                     </div>
 
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                        <h3 class="text-xl font-bold text-slate-900 mb-4">Premium Carbon Report for SMEs</h3>
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-1">Growth Metrics</h3>
+                        <p class="text-slate-500 mb-4">Track the growth of key environmental impact metrics over time.</p>
+                        <div class="chart-container">
+                            <canvas id="growth-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Premium Carbon Reports for SMEs</h3>
                         ${!mockData.organization.premiumAccess ? `
-                            <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-200 text-center">
+                            <div class="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg border border-gray-200 text-center game-card">
                                 ${getLucideIcon('Lock', 48, '#6B7280')}
                                 <p class="text-lg text-slate-700 mb-3">
                                     Unlock comprehensive carbon reports for your organization.
@@ -637,29 +894,29 @@
                                         mockData.organization.greenBadges >= 5
                                             ? 'bg-emerald-600 hover:bg-emerald-700'
                                             : 'bg-gray-400 cursor-not-allowed'
-                                    }"
+                                    } game-button"
                                     ${mockData.organization.greenBadges < 5 ? 'disabled' : ''}>
                                     ${mockData.organization.greenBadges >= 5 ? `
                                         ${getLucideIcon('Unlock', 18, 'white')} Purchase Report ($99.99)
-                                    ` : 'Unlock Premium Report'}
+                                    ` : 'Unlock Premium Reports'}
                                 </button>
                             </div>
                         ` : `
-                            <div class="flex flex-col items-center justify-center p-4 bg-emerald-50 rounded-lg border border-emerald-200 text-center">
+                            <div class="flex flex-col items-center justify-center p-4 bg-emerald-50 rounded-lg border border-emerald-200 text-center game-card">
                                 ${getLucideIcon('CheckCircle', 48, '#059669')}
                                 <p class="text-lg font-semibold text-emerald-800">
                                     Premium Report Access Granted!
                                 </p>
                                 <p class="text-sm text-slate-700 mt-2 mb-4">
-                                    You now have access to detailed carbon emission and sustainability impact reports.
+                                    You now have access to detailed reports on your carbon emissions and sustainability impact.
                                 </p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                                     ${mockData.organization.premiumReports.map(report => `
-                                        <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-left">
+                                        <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-left game-card">
                                             <h4 class="font-bold text-slate-900">${report.title}</h4>
                                             <p class="text-sm text-slate-600">${report.brief}</p>
                                             <p class="text-emerald-600 font-semibold mt-2">${report.price}</p>
-                                            <button class="mt-2 px-4 py-1.5 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition">
+                                            <button class="mt-2 px-4 py-1.5 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700 transition game-button">
                                                 View Report
                                             </button>
                                         </div>
@@ -702,13 +959,80 @@
                 options: { maintainAspectRatio: false, responsive: true }
             });
 
+            // Initialize Growth Chart
+            if (growthChartInstance) {
+                growthChartInstance.destroy();
+            }
+            const growthCtx = document.getElementById('growth-chart').getContext('2d');
+            growthChartInstance = new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                    datasets: [
+                        {
+                            label: 'Trees Planted',
+                            data: [4000, 4200, 4500, 4700, 4900, 5100, 5230],
+                            borderColor: '#10B981', // Darker emerald
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        },
+                        {
+                            label: 'Clean Energy (kWh)',
+                            data: [6000, 6200, 6500, 6800, 7000, 7200, 7500],
+                            borderColor: '#FBBF24', // Amber
+                            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y3'
+                        }
+                    ]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left', // Changed to left as there's only one Y-axis now
+                            grid: {
+                                drawOnChartArea: true, // Draw grid lines for the single Y-axis
+                            },
+                            title: {
+                                display: true,
+                                text: 'Trees Planted'
+                            }
+                        },
+                        y3: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            title: {
+                                display: true,
+                                text: 'Clean Energy (kWh)'
+                            }
+                        }
+                    }
+                }
+            });
+
+
             // Attach event listener for premium unlock button
             const unlockBtn = document.getElementById('unlock-premium-btn');
             if (unlockBtn) {
                 unlockBtn.onclick = () => {
                     if (mockData.organization.greenBadges >= 5) {
                         mockData.organization.premiumAccess = true;
-                        showToast('Premium Report Unlocked! (Simulated Purchase)', 'success');
+                        showToast('Premium Reports Unlocked! (Simulated Purchase)', 'success');
                         renderDashboardPage(); // Re-render to show unlocked state
                     }
                 };
@@ -719,17 +1043,17 @@
         function renderTradingHubPage() {
             const mainContent = document.getElementById('main-content');
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Trading Hub</h2>
-                        <p class="text-lg text-slate-500 mt-1">This module allows users to exchange pre-loved items, promoting a circular economy. Explore items in a marketplace or find matches with other users.</p>
+                        <p class="text-lg text-slate-500 mt-1">This module allows users to trade pre-loved items, fostering a circular economy. Explore items in a marketplace or find matches with other users.</p>
                     </header>
 
                     <div class="flex mb-6 space-x-4 border-b border-slate-200">
-                        <button id="marketplace-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentTradingSubView === 'marketplace' ? 'bg-emerald-500 text-white' : 'hover:bg-slate-100 text-slate-700'}">
+                        <button id="marketplace-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentTradingSubView === 'marketplace' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
                             Marketplace
                         </button>
-                        <button id="matching-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentTradingSubView === 'matching' ? 'bg-emerald-500 text-white' : 'hover:bg-slate-100 text-slate-700'}">
+                        <button id="matching-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentTradingSubView === 'matching' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
                             Matching
                         </button>
                     </div>
@@ -757,15 +1081,15 @@
 
         function renderMarketplaceView(container) {
             let itemsHtml = mockData.trading.items.map(item => `
-                <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden transform hover:scale-105 transition-transform duration-200 game-card">
                     <img src="${item.imageUrl}" alt="Image of ${item.title}" class="w-full h-48 object-cover p-2" onerror="this.onerror=null;this.src='https://placehold.co/200x150/E0F2F7/000000?text=Item';">
                     <div class="p-4">
                         <h4 class="text-lg font-bold text-slate-900 mb-1">${item.title}</h4>
                         <p class="text-sm text-slate-600 mb-2">${item.description}</p>
                         <span class="text-emerald-600 font-bold text-xl block mb-3">${item.ecoPoints} Eco-Points</span>
                         <div class="flex gap-2 w-full">
-                            <button data-item-title="${item.title}" data-item-owner="${item.owner}" class="exchange-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition flex-1">Exchange</button>
-                            <button data-item-title="${item.title}" class="old-stuff-btn bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-600 transition flex-1">Old Stuff</button>
+                            <button data-item-title="${item.title}" data-item-owner="${item.owner}" class="exchange-btn bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition flex-1 game-button">Exchange</button>
+                            <button data-item-title="${item.title}" class="old-stuff-btn bg-blue-500 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-blue-600 transition flex-1 game-button">Old Stuff</button>
                         </div>
                     </div>
                 </div>
@@ -774,8 +1098,8 @@
             container.innerHTML = `
                 <div class="animate-fade-in">
                     <div class="mb-6 flex flex-col sm:flex-row gap-4">
-                        <input type="text" placeholder="Search items..." class="flex-1 p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" />
-                        <input type="text" placeholder="Set location (e.g., Ho Chi Minh City)" class="flex-1 p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500" />
+                        <input type="text" placeholder="Search items..." class="flex-1 p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 game-button" />
+                        <input type="text" placeholder="Set location (e.g., Ho Chi Minh City)" class="flex-1 p-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 game-button" />
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${itemsHtml}
@@ -787,7 +1111,7 @@
                 btn.onclick = (e) => {
                     const title = e.currentTarget.dataset.itemTitle;
                     const owner = e.currentTarget.dataset.itemOwner;
-                    showToast(`Simulating chat for exchanging: "${title}" with ${owner}`, 'info');
+                    showToast(`Simulating chat to exchange: "${title}" with ${owner}`, 'info');
                 };
             });
             container.querySelectorAll('.old-stuff-btn').forEach(btn => {
@@ -802,12 +1126,12 @@
             const currentItem = mockData.trading.items[currentMatchingItemIndex];
             container.innerHTML = `
                 <div class="animate-fade-in">
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md mb-6 text-center">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md mb-6 text-center game-card">
                         <p class="text-lg text-slate-700 font-semibold">
-                            Swipe Right (👍) if you like an item, Swipe Left (👎) if you don't. A "match" is created only when both users like each other's items, indicating an accepted exchange!
+                            Swipe right (👍) if you like an item, Swipe left (👎) if you don't. A "match" is only created when both users like each other's items, indicating an an accepted exchange!
                         </p>
                     </div>
-                    <div class="flex flex-col items-center justify-center h-[500px] bg-slate-100 rounded-xl border border-slate-200 shadow-inner relative overflow-hidden">
+                    <div class="flex flex-col items-center justify-center h-[500px] bg-slate-100 rounded-xl border border-slate-200 shadow-inner relative overflow-hidden game-card">
                         ${currentItem ? `
                             <div class="bg-white rounded-xl shadow-lg border border-slate-200 w-80 h-96 flex flex-col items-center justify-center p-4">
                                 <img src="${currentItem.imageUrl || 'https://placehold.co/200x150/E0F2F7/000000?text=Image+Not+Available'}" alt="Image of ${currentItem.title}" class="w-full h-48 object-contain mb-4 rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/200x150/E0F2F7/000000?text=Image+Not+Available';">
@@ -818,10 +1142,10 @@
                             <div class="text-center text-slate-500 text-xl">No more items to match!</div>
                         `}
                         <div class="absolute bottom-6 flex space-x-6">
-                            <button id="swipe-left-btn" class="bg-red-500 text-white p-4 rounded-full shadow-lg hover:bg-red-600 transition transform hover:scale-110">
+                            <button id="swipe-left-btn" class="bg-red-500 text-white p-4 rounded-full shadow-lg hover:bg-red-600 transition game-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
-                            <button id="swipe-right-btn" class="bg-emerald-500 text-white p-4 rounded-full shadow-lg hover:bg-emerald-600 transition transform hover:scale-110">
+                            <button id="swipe-right-btn" class="bg-emerald-500 text-white p-4 rounded-full shadow-lg hover:bg-emerald-600 transition game-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
                             </button>
                         </div>
@@ -832,7 +1156,7 @@
             const handleSwipeLogic = (direction) => {
                 if (direction === 'right') {
                     if ((currentMatchingItemIndex + 1) % 3 === 0) {
-                        showToast(`It's a Match! You and another user liked "${mockData.trading.items[currentMatchingItemIndex].title}"! Start exchanging!`, 'success');
+                        showToast(`Matched! You and another user liked "${mockData.trading.items[currentMatchingItemIndex].title}"! Start exchanging!`, 'success');
                     }
                 }
                 currentMatchingItemIndex = (currentMatchingItemIndex + 1) % mockData.trading.items.length;
@@ -941,17 +1265,17 @@
             const estimatedWeeklyEcoPoints = (estimatedWeeklyCarbonSaved * mockData.carbon.ecoPointRate).toFixed(0);
 
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Carbon Tracker</h2>
-                        <p class="text-lg text-slate-500 mt-1">This section visualizes the Carbon Tracker API, which allows users to see their positive environmental impact in real-time. The chart below simulates fetching a user's CO2 savings over a period, demonstrating how data can be dynamically updated based on user selections.</p>
+                        <p class="text-lg text-slate-500 mt-1">This section showcases the Carbon Tracking API, allowing users to view their positive environmental impact in real-time. The charts below simulate fetching user's CO2 saving data over a period, demonstrating how data can be dynamically updated based on user selection.</p>
                     </header>
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold text-slate-900">CO2 Savings Trend (kg)</h3>
                             <div id="carbon-period-selector" class="flex gap-1 bg-slate-100 p-1 rounded-lg">
-                                <button data-period="weekly" class="period-btn px-3 py-1 text-sm font-semibold rounded-md ${carbonPeriod === 'weekly' ? 'bg-white text-emerald-700 shadow' : 'text-slate-600'}">Weekly</button>
-                                <button data-period="monthly" class="period-btn px-3 py-1 text-sm font-medium rounded-md ${carbonPeriod === 'monthly' ? 'bg-white text-emerald-700 shadow' : 'text-slate-600'}">Monthly</button>
+                                <button data-period="weekly" class="period-btn px-3 py-1 text-sm font-semibold rounded-md ${carbonPeriod === 'weekly' ? 'bg-white text-emerald-700 shadow' : 'text-slate-600'} game-button">Weekly</button>
+                                <button data-period="monthly" class="period-btn px-3 py-1 text-sm font-medium rounded-md ${carbonPeriod === 'monthly' ? 'bg-white text-emerald-700 shadow' : 'text-slate-600'} game-button">Monthly</button>
                             </div>
                         </div>
                         <div class="chart-container">
@@ -960,13 +1284,13 @@
                     </div>
 
                     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                             <h3 class="text-xl font-bold text-slate-900 mb-4">Your Weekly Green Activities</h3>
                             <div class="chart-container h-64">
                                 <canvas id="daily-activities-pie-chart"></canvas>
                             </div>
                         </div>
-                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md flex flex-col justify-center items-center text-center">
+                        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md flex flex-col justify-center items-center text-center game-card">
                             <h3 class="text-xl font-bold text-slate-900 mb-3">Estimated Weekly Impact</h3>
                             <p class="text-4xl font-bold text-emerald-600 mb-2">${estimatedWeeklyCarbonSaved} kg CO2 Saved</p>
                             <p class="text-2xl font-semibold text-blue-600">~ ${estimatedWeeklyEcoPoints} Eco-Points</p>
@@ -1010,92 +1334,104 @@
             document.getElementById('distance-display').textContent = `${user.walkingCyclingDistanceKm} km`;
         }
 
-
         function renderEcoPointsPage() {
             const mainContent = document.getElementById('main-content');
             const user = mockData.users[currentUser];
             const transactions = mockData.pointsTransactions[currentUser];
             const comparisonData = mockData.ecoPointComparisonData;
-            const redemptionOptions = mockData.redemptionOptions;
+            const dailyChallenges = mockData.dailyChallenges[currentUser] || []; // Get challenges for current user
 
             // Reset image upload state for the current render
             isReusableImageUploaded = false; // Reset for reusable items
-            isWasteScanned = false; // Reset for waste sorting
-            currentWasteType = null; // Reset for waste sorting
+            isWasteScanned = false; // Reset for waste sorting step 1
+            currentWasteType = null; // Reset for identified waste type
 
             let transactionsHtml = transactions.map((tx, index) => `
-                <li class="flex justify-between items-center p-3 rounded-lg hover:bg-slate-50">
+                <li class="flex justify-between items-center p-3 rounded-lg hover:bg-slate-50 game-card">
                     <span class="text-slate-700">${tx.desc}</span>
                     <span class="font-bold ${tx.points.startsWith('+') ? 'text-green-600' : 'text-red-600'}">${tx.points}</span>
                 </li>
-            `).join('');
-
-            let redemptionOptionsHtml = redemptionOptions.map(option => `
-                <button data-option-id="${option.id}"
-                    class="redeem-btn w-full text-left font-semibold p-3 rounded-lg transition flex justify-between items-center ${
-                        user.ecoPoints >= option.cost
-                            ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }"
-                    ${user.ecoPoints < option.cost ? 'disabled' : ''}>
-                    <span>${option.name}</span>
-                    <span class="font-bold">${option.cost} pts</span>
-                </button>
             `).join('');
 
             let friendOptionsHtml = Object.keys(comparisonData.friendsActivities).map(key => `
                 <option value="${key}" ${selectedFriend === key ? 'selected' : ''}>${comparisonData.friendsActivities[key].name}</option>
             `).join('');
 
-
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Eco-Points System</h2>
-                        <p class="text-lg text-slate-500 mt-1">Here we demonstrate the Eco-Points API, the core of our incentive system. Users earn points for sustainable actions and can redeem them. The components below simulate fetching a user's balance, viewing their transaction history, and performing a redemption action via an API call.</p>
+                        <p class="text-lg text-slate-500 mt-1">This is where we present the Eco-Points API, the core of our incentive system. Users earn points for sustainable actions and can redeem them. The components below simulate fetching user's balance, viewing their transaction history, and performing redemption actions via an API call.</p>
                     </header>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="md:col-span-1 flex flex-col gap-6">
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center">
-                                <h3 class="font-semibold text-slate-500">Current Balance</h3>
-                                <p id="points-balance" class="text-5xl font-bold text-emerald-600 mt-2">${user.ecoPoints.toLocaleString()}</p>
-                                <p class="text-sm text-slate-400 mt-1">Eco-Points</p>
-                            </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                                <h3 class="text-lg font-bold text-slate-900 mb-3">Redeem Points</h3>
-                                <div class="flex flex-col gap-3">
-                                    ${redemptionOptionsHtml}
-                                </div>
-                            </div>
+                    <div class="flex mb-6 space-x-4 border-b border-slate-200">
+                        <button id="activities-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentEcoPointsSubView === 'activities' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
+                            Your Activities
+                        </button>
+                        <button id="daily-challenge-tab-btn" class="px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentEcoPointsSubView === 'challenges' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
+                            Daily Challenges
+                        </button>
+                    </div>
+                    <div id="eco-points-subview-content"></div>
+                </div>
+            `;
+
+            // Attach event listeners for sub-tabs
+            document.getElementById('activities-tab-btn').onclick = () => {
+                currentEcoPointsSubView = 'activities';
+                renderEcoPointsPage(); // Re-render to update tab and content
+            };
+            document.getElementById('daily-challenge-tab-btn').onclick = () => {
+                currentEcoPointsSubView = 'challenges';
+                renderEcoPointsPage(); // Re-render to update tab and content
+            };
+
+            const ecoPointsSubviewContent = document.getElementById('eco-points-subview-content');
+            if (currentEcoPointsSubView === 'activities') {
+                renderEcoPointsActivitiesView(ecoPointsSubviewContent, user, transactions, friendOptionsHtml);
+            } else {
+                renderDailyChallengesView(ecoPointsSubviewContent, dailyChallenges, user);
+            }
+        }
+
+        // Sub-view for Eco-Points page: Your Activities
+        function renderEcoPointsActivitiesView(container, user, transactions, friendOptionsHtml) {
+            container.innerHTML = `
+                <div class="animate-fade-in flex flex-col gap-6">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md text-center game-card">
+                        <h3 class="font-semibold text-slate-500">Current Balance</h3>
+                        <p id="points-balance" class="text-5xl font-bold text-emerald-600 mt-2">${user.ecoPoints.toLocaleString()}</p>
+                        <p class="text-sm text-slate-400 mt-1">Eco-Points</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Transaction History</h3>
+                        <ul id="points-transactions" class="space-y-3">
+                            ${transactions.map((tx, index) => `
+                                <li class="flex justify-between items-center p-3 rounded-lg hover:bg-slate-50 game-card">
+                                    <span class="text-slate-700">${tx.desc}</span>
+                                    <span class="font-bold ${tx.points.startsWith('+') ? 'text-green-600' : 'text-red-600'}">${tx.points}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Your Green Activities vs. Friends</h3>
+                        <div class="mb-4">
+                            <label for="friend-select" class="block text-sm font-medium text-slate-700 mb-2">Compare with:</label>
+                            <select id="friend-select" class="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 game-button">
+                                ${friendOptionsHtml}
+                            </select>
                         </div>
-                        <div class="md:col-span-2 flex flex-col gap-6">
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                                <h3 class="text-xl font-bold text-slate-900 mb-4">Transaction History</h3>
-                                <ul id="points-transactions" class="space-y-3">
-                                    ${transactionsHtml}
-                                </ul>
-                            </div>
-                            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                                <h3 class="text-xl font-bold text-slate-900 mb-4">Your Green Activities vs. Friends</h3>
-                                <div class="mb-4">
-                                    <label for="friend-select" class="block text-sm font-medium text-slate-700 mb-2">Compare with:</label>
-                                    <select id="friend-select" class="w-full p-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                                        ${friendOptionsHtml}
-                                    </select>
-                                </div>
-                                <div class="chart-container h-80">
-                                    <canvas id="eco-points-comparison-chart"></canvas>
-                                </div>
-                            </div>
+                        <div class="chart-container h-80">
+                            <canvas id="eco-points-comparison-chart"></canvas>
                         </div>
                     </div>
 
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                         <h3 class="text-xl font-bold text-slate-900 mb-4">How to Earn Eco-Points</h3>
                         <div class="flex flex-col gap-6">
                             <!-- Method 1: MoMo Green Payments -->
                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600">
+                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600 shadow-md">
                                     ${getLucideIcon('Leaf', 20)}
                                 </div>
                                 <div>
@@ -1106,17 +1442,17 @@
 
                             <!-- Method 2: Walking/Cycling Tracking -->
                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600">
+                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600 shadow-md">
                                     ${getLucideIcon('Walk', 20)}
                                 </div>
                                 <div>
                                     <h4 class="text-lg font-semibold text-slate-900">Track Walking/Cycling Distance</h4>
                                     <p class="text-slate-700 text-sm mb-2">Activate the app to track your walking or cycling distance and earn points based on kilometers covered.</p>
                                     <div class="flex items-center gap-4">
-                                        <button id="start-tracking-btn" class="px-4 py-2 rounded-lg text-white font-semibold transition ${isWalkingTrackingActive ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'}" ${isWalkingTrackingActive ? 'disabled' : ''}>
+                                        <button id="start-tracking-btn" class="px-4 py-2 rounded-lg text-white font-semibold transition ${isWalkingTrackingActive ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} game-button" ${isWalkingTrackingActive ? 'disabled' : ''}>
                                             Start Tracking
                                         </button>
-                                        <button id="stop-tracking-btn" class="px-4 py-2 rounded-lg text-white font-semibold transition ${!isWalkingTrackingActive ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'}" ${!isWalkingTrackingActive ? 'disabled' : ''}>
+                                        <button id="stop-tracking-btn" class="px-4 py-2 rounded-lg text-white font-semibold transition ${!isWalkingTrackingActive ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700'} game-button" ${!isWalkingTrackingActive ? 'disabled' : ''}>
                                             Stop Tracking
                                         </button>
                                         <span id="distance-display" class="text-xl font-bold text-slate-800">${user.walkingCyclingDistanceKm.toFixed(1)} km</span>
@@ -1126,7 +1462,7 @@
 
                             <!-- Method 3: Scan QR with Image Verification -->
                             <div class="flex items-start gap-4">
-                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600">
+                                <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600 shadow-md">
                                     ${getLucideIcon('QrCode', 20)}
                                 </div>
                                 <div>
@@ -1134,39 +1470,39 @@
                                     <p class="text-slate-700 text-sm mb-4">Earn Eco-Points by verifying your eco-friendly actions.</p>
 
                                     <!-- Sub-section 3.1: Reusable Bottle/Recycled Bag Scan -->
-                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4 game-card">
                                         <h5 class="font-semibold text-slate-800 mb-2">1. Reusable Bottle/Bag Verification (Limit: 2/day)</h5>
-                                        <p class="text-slate-600 text-sm mb-3">Upload an image of your reusable bottle or recycled bag in use, then scan the QR code to verify. You can do this up to 2 times per day.</p>
+                                        <p class="text-slate-600 text-sm mb-3">Upload an image of your reusable bottle or bag in use, then scan a QR code for verification. You can do this up to 2 times per day.</p>
                                         <input type="file" id="reusable-image-upload" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100"/>
                                         <div id="reusable-image-preview" class="w-24 h-24 border border-slate-300 rounded-lg flex items-center justify-center text-slate-400 text-xs overflow-hidden mt-3">
-                                            No Image
+                                            No image
                                         </div>
-                                        <button id="scan-reusable-qr-btn" class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-emerald-700 transition w-full ${!isReusableImageUploaded || isReusableScanLimitReached() ? 'opacity-50 cursor-not-allowed' : ''}" ${!isReusableImageUploaded || isReusableScanLimitReached() ? 'disabled' : ''}>
+                                        <button id="scan-reusable-qr-btn" class="mt-4 bg-emerald-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-emerald-700 transition w-full ${!isReusableImageUploaded || isReusableScanLimitReached() ? 'opacity-50 cursor-not-allowed' : ''} game-button" ${!isReusableImageUploaded || isReusableScanLimitReached() ? 'disabled' : ''}>
                                             Simulate Scan (Reusable Item)
                                         </button>
                                         <p id="reusable-scan-message" class="text-sm text-slate-500 mt-2">
-                                            ${isReusableScanLimitReached() ? `You have reached the limit for reusable item scans today (${user.reusableScansToday}/2).` : (isReusableImageUploaded ? `Image uploaded! You can scan for reusable items (${user.reusableScansToday}/2).` : 'Upload an image to enable reusable item scan.')}
+                                            ${isReusableScanLimitReached() ? `You've reached the reusable item scan limit today (${user.reusableScansToday}/2).` : (isReusableImageUploaded ? `Image uploaded! You can scan a reusable item (${user.reusableScansToday}/2).` : 'Upload an image to enable reusable item scanning.')}
                                         </p>
                                     </div>
 
                                     <!-- Sub-section 3.2: Waste Sorting -->
-                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 game-card">
                                         <h5 class="font-semibold text-slate-800 mb-2">2. Waste Sorting (Unlimited)</h5>
                                         <p class="text-slate-600 text-sm mb-3">
-                                            **Step 1: Scan Waste.** Use your camera to identify the type of waste.
-                                            **Step 2: Scan Bin QR.** After sorting, scan the QR code on the designated recycling bin to earn points.
+                                            **Step 1: Scan waste.** Use your camera to identify the waste type.
+                                            **Step 2: Scan bin QR.** After sorting, scan the QR code on the designated waste bin to earn points.
                                         </p>
-                                        <button id="scan-waste-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-blue-700 transition w-full mb-3">
+                                        <button id="scan-waste-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-blue-700 transition w-full mb-3 game-button">
                                             Simulate Scan Waste
                                         </button>
                                         <p id="waste-type-display" class="text-center text-lg font-bold text-slate-800 mb-3 ${currentWasteType ? '' : 'hidden'}">
                                             Waste Type: <span class="text-emerald-600">${currentWasteType || ''}</span>
                                         </p>
-                                        <button id="scan-bin-qr-btn" class="bg-emerald-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-emerald-700 transition w-full ${!isWasteScanned ? 'opacity-50 cursor-not-allowed' : ''}" ${!isWasteScanned ? 'disabled' : ''}>
+                                        <button id="scan-bin-qr-btn" class="bg-emerald-600 text-white px-6 py-2 rounded-lg text-base font-semibold hover:bg-emerald-700 transition w-full ${!isWasteScanned ? 'opacity-50 cursor-not-allowed' : ''} game-button" ${!isWasteScanned ? 'disabled' : ''}>
                                             Simulate Scan Bin QR
                                         </button>
                                         <p id="waste-scan-message" class="text-sm text-slate-500 mt-2">
-                                            ${isWasteScanned ? 'Waste identified! Now scan the bin QR.' : 'Scan waste first to proceed.'}
+                                            ${isWasteScanned ? 'Waste identified! Now scan the bin QR.' : 'Please scan waste first to proceed.'}
                                         </p>
                                     </div>
                                 </div>
@@ -1175,29 +1511,15 @@
                     </div>
                 </div>
             `;
-
-            // Attach event listeners
-            document.querySelectorAll('.redeem-btn').forEach(button => {
-                button.onclick = (e) => {
-                    const optionId = parseInt(e.currentTarget.dataset.optionId);
-                    const option = redemptionOptions.find(opt => opt.id === optionId);
-                    if (option && user.ecoPoints >= option.cost) {
-                        mockData.users[currentUser].ecoPoints -= option.cost;
-                        mockData.pointsTransactions[currentUser].push({ desc: `Redeemed ${option.name}`, points: `-${option.cost}` });
-                        showToast(`Successfully redeemed ${option.name}!`, 'success');
-                        renderEcoPointsPage(); // Re-render to update balance and history
-                    } else {
-                        showToast(`Not enough Eco-Points to redeem ${option.name}.`, 'info');
-                    }
-                };
-            });
-
+            // Attach event listener for friend select
             document.getElementById('friend-select').onchange = (e) => {
                 selectedFriend = e.target.value;
                 updateEcoPointsChart();
             };
+            // Initialize/Update Chart
+            updateEcoPointsChart();
 
-            // Event listeners for Walking/Cycling Tracking
+            // Attach event listeners for Walking/Cycling Tracking (moved here as they affect the main page)
             const startTrackingBtn = document.getElementById('start-tracking-btn');
             const stopTrackingBtn = document.getElementById('stop-tracking-btn');
 
@@ -1225,7 +1547,7 @@
                         const user = mockData.users[currentUser];
                         const pointsEarned = Math.floor(user.walkingCyclingDistanceKm * 2); // Example: 2 points per km
                         user.ecoPoints += pointsEarned;
-                        mockData.pointsTransactions[currentUser].push({ desc: `Walk/Cycle Tracking: ${user.walkingCyclingDistanceKm} km`, points: `+${pointsEarned}` });
+                        mockData.pointsTransactions[currentUser].push({ desc: `Walking/Cycling tracking: ${user.walkingCyclingDistanceKm} km`, points: `+${pointsEarned}` });
                         showToast(`Tracking stopped! Earned ${pointsEarned} Eco-Points!`, 'success');
                         startTrackingBtn.disabled = false;
                         stopTrackingBtn.disabled = true;
@@ -1255,20 +1577,19 @@
                             if (!isReusableScanLimitReached()) {
                                 scanReusableQrBtn.disabled = false;
                                 scanReusableQrBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                                reusableScanMessage.textContent = `Image uploaded! You can scan for reusable items (${user.reusableScansToday}/2).`;
                             } else {
                                 scanReusableQrBtn.disabled = true;
                                 scanReusableQrBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                                reusableScanMessage.textContent = `You have reached the limit for reusable item scans today (${user.reusableScansToday}/2).`;
                             }
+                            reusableScanMessage.textContent = isReusableScanLimitReached() ? `You've reached the reusable item scan limit today (${user.reusableScansToday}/2).` : (isReusableImageUploaded ? `Image uploaded! You can scan a reusable item (${user.reusableScansToday}/2).` : 'Upload an image to enable reusable item scanning.');
                         };
                         reader.readAsDataURL(e.target.files[0]);
                     } else {
-                        reusableImagePreview.innerHTML = 'No Image';
+                        reusableImagePreview.innerHTML = 'No image';
                         isReusableImageUploaded = false;
                         scanReusableQrBtn.disabled = true;
                         scanReusableQrBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                        reusableScanMessage.textContent = 'Upload an image to enable reusable item scan.';
+                        reusableScanMessage.textContent = 'Upload an image to enable reusable item scanning.';
                     }
                 };
             }
@@ -1281,11 +1602,11 @@
                         user.ecoPoints += pointsToAdd;
                         user.reusableScansToday += 1;
                         user.lastScanDateReusable = new Date().toISOString().split('T')[0]; // Store today's date
-                        mockData.pointsTransactions[currentUser].push({ desc: `Reusable Item Scan: ${user.reusableScansToday}/2`, points: `+${pointsToAdd}` });
-                        showToast(`Reusable item scanned! Earned ${pointsToAdd} Eco-Points!`, 'success');
+                        mockData.pointsTransactions[currentUser].push({ desc: `Reusable item scan: ${user.reusableScansToday}/2`, points: `+${pointsToAdd}` });
+                        showToast(`Scanned reusable item! Earned ${pointsToAdd} Eco-Points!`, 'success');
                         renderEcoPointsPage(); // Re-render to update points, history, and button state
                     } else if (isReusableScanLimitReached()) {
-                        showToast(`You have reached the limit for reusable item scans today (${user.reusableScansToday}/2).`, 'info');
+                        showToast(`You've reached the reusable item scan limit today (${user.reusableScansToday}/2).`, 'info');
                     } else {
                         showToast('Please upload an image to verify your reusable item first.', 'info');
                     }
@@ -1318,23 +1639,77 @@
                     if (isWasteScanned) {
                         const pointsToAdd = 20; // Points for waste sorting
                         user.ecoPoints += pointsToAdd;
-                        mockData.pointsTransactions[currentUser].push({ desc: `Waste Sorted: ${currentWasteType}`, points: `+${pointsToAdd}` });
-                        showToast(`Bin QR scanned! Earned ${pointsToAdd} Eco-Points for sorting ${currentWasteType} waste!`, 'success');
+                        mockData.pointsTransactions[currentUser].push({ desc: `Waste sorted: ${currentWasteType}`, points: `+${pointsToAdd}` });
+                        showToast(`Scanned bin QR! Earned ${pointsToAdd} Eco-Points for sorting ${currentWasteType} waste!`, 'success');
                         isWasteScanned = false;
                         currentWasteType = null;
                         wasteTypeDisplay.classList.add('hidden');
                         scanBinQrBtn.disabled = true;
                         scanBinQrBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                        wasteScanMessage.textContent = 'Scan waste first to proceed.';
+                        wasteScanMessage.textContent = 'Please scan waste first to proceed.';
                         renderEcoPointsPage(); // Re-render to update points and history
                     } else {
-                        showToast('Please scan the waste first before scanning the bin QR.', 'info');
+                        showToast('Please scan waste before scanning the bin QR.', 'info');
                     }
                 };
             }
+        }
 
-            // Initialize/Update Chart
-            updateEcoPointsChart();
+        // Sub-view for Eco-Points page: Daily Challenges
+        function renderDailyChallengesView(container, challenges, user) {
+            let challengesHtml = challenges.map(challenge => `
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card ${challenge.completed ? 'opacity-70 border-green-300' : ''}">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="text-lg font-bold text-slate-900">${challenge.title}</h4>
+                        <span class="text-emerald-600 font-bold text-xl">+${challenge.points} pts</span>
+                    </div>
+                    <p class="text-sm text-slate-600 mb-3">${challenge.description}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs text-slate-500">Time left: ${challenge.timeLeft}</span>
+                        <button data-challenge-id="${challenge.id}"
+                            class="complete-challenge-btn px-4 py-2 rounded-lg text-white font-semibold transition ${
+                                challenge.completed
+                                    ? 'bg-green-500 cursor-not-allowed'
+                                    : 'bg-blue-600 hover:bg-blue-700'
+                            } game-button"
+                            ${challenge.completed ? 'disabled' : ''}>
+                            ${challenge.completed ? 'Completed!' : 'Complete Challenge'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="animate-fade-in">
+                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                            ${getLucideIcon('CalendarCheck', 24, '#065F46')} Daily Challenges
+                        </h3>
+                        <p class="text-slate-700 mb-4">Complete these time-limited challenges to earn extra Eco-Points!</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            ${challengesHtml.length > 0 ? challengesHtml : '<p class="text-slate-500 text-center col-span-full">No daily challenges available for this user today.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Attach event listeners for challenge completion
+            container.querySelectorAll('.complete-challenge-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    const challengeId = parseInt(e.currentTarget.dataset.challengeId);
+                    const userChallenges = mockData.dailyChallenges[currentUser];
+                    const challenge = userChallenges.find(c => c.id === challengeId);
+
+                    if (challenge && !challenge.completed) {
+                        mockData.users[currentUser].ecoPoints += challenge.points;
+                        challenge.completed = true;
+                        challenge.timeLeft = 'Completed';
+                        mockData.pointsTransactions[currentUser].push({ desc: `Completed Daily Challenge: ${challenge.title}`, points: `+${challenge.points}` });
+                        showToast(`Challenge "${challenge.title}" completed! Earned ${challenge.points} Eco-Points!`, 'success');
+                        renderEcoPointsPage(); // Re-render the EcoPoints page to update points and challenge status
+                    }
+                };
+            });
         }
 
         function updateEcoPointsChart() {
@@ -1362,7 +1737,7 @@
                             borderWidth: 1
                         },
                         {
-                            label: `${comparisonData.friendsActivities[selectedFriend]?.name}'s Activities`,
+                            label: `Activities of ${comparisonData.friendsActivities[selectedFriend]?.name}`,
                             data: friendData,
                             backgroundColor: '#475569',
                             borderColor: '#334155',
@@ -1401,23 +1776,126 @@
             });
         }
 
+        // --- RedeemPointsPage ---
+        function renderRedeemPointsPage() {
+            const mainContent = document.getElementById('main-content');
+            const user = mockData.users[currentUser];
+            const redemptionOptions = mockData.redemptionOptions;
+
+            const categorizedOptions = redemptionOptions.reduce((acc, option) => {
+                if (!acc[option.type]) {
+                    acc[option.type] = [];
+                }
+                acc[option.type].push(option);
+                return acc;
+            }, {});
+
+            let redemptionSectionsHtml = Object.keys(categorizedOptions).map(category => {
+                const categoryTitle = {
+                    'coupon': 'Coupons & Vouchers',
+                    'product': 'Eco-Products',
+                    'donation': 'Donations',
+                    'voucher': 'Food & Drinks Vouchers'
+                }[category] || category; // Fallback for uncategorized
+
+                const categoryIcon = {
+                    'coupon': getLucideIcon('DollarSign', 24, '#059669'),
+                    'product': getLucideIcon('ShoppingBag', 24, '#059669'),
+                    'donation': getLucideIcon('Leaf', 24, '#059669'),
+                    'voucher': getLucideIcon('Utensils', 24, '#059669')
+                }[category] || '';
+
+                const itemsHtml = categorizedOptions[category].map(option => `
+                    <div class="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden game-card">
+                        <img src="${option.img}" alt="${option.name}" class="w-full h-32 object-cover p-2" onerror="this.onerror=null;this.src='https://placehold.co/150x100/E0F2F7/000000?text=Item';">
+                        <div class="p-4">
+                            <h4 class="text-lg font-bold text-slate-900 mb-1">${option.name}</h4>
+                            <p class="text-sm text-slate-600 mb-2">Type: ${option.type}</p>
+                            <span class="text-emerald-600 font-bold text-xl block mb-3">${option.cost} pts</span>
+                            <button data-option-id="${option.id}"
+                                class="redeem-btn w-full bg-emerald-600 text-white px-3 py-1.5 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition game-button ${
+                                    user.ecoPoints >= option.cost
+                                        ? ''
+                                        : 'opacity-50 cursor-not-allowed bg-gray-400 hover:bg-gray-400'
+                                }"
+                                ${user.ecoPoints < option.cost ? 'disabled' : ''}>
+                                Redeem Now
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <section class="mb-12">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                            ${categoryIcon} ${categoryTitle}
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${itemsHtml}
+                        </div>
+                    </section>
+                `;
+            }).join('');
+
+            mainContent.innerHTML = `
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
+                    <header class="mb-8">
+                        <h2 class="text-4xl font-bold text-slate-900">Redeem Eco-Points</h2>
+                        <p class="text-lg text-slate-500 mt-1">Use your Eco-Points to redeem exciting rewards and offers!</p>
+                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 mt-4 text-center game-card">
+                            <h3 class="font-semibold text-slate-500">Your Eco-Points Balance</h3>
+                            <p class="text-5xl font-bold text-emerald-600 mt-2">${user.ecoPoints.toLocaleString()}</p>
+                        </div>
+                    </header>
+
+                    ${redemptionSectionsHtml}
+
+                    <section class="mb-12">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                            ${getLucideIcon('TrendingUp', 24, '#059669')} Hot Deals & Partner Promotions
+                        </h3>
+                        <div id="redemption-promotions-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Promotions will be dynamically loaded here by renderPromotions() or similar logic -->
+                        </div>
+                    </section>
+                </div>
+            `;
+            // Call renderPromotions to populate the hot deals section on the redeem page
+            renderPromotions('redemption-promotions-grid');
+
+            document.querySelectorAll('.redeem-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    const optionId = parseInt(e.currentTarget.dataset.optionId);
+                    const option = redemptionOptions.find(opt => opt.id === optionId);
+                    if (option && user.ecoPoints >= option.cost) {
+                        mockData.users[currentUser].ecoPoints -= option.cost;
+                        mockData.pointsTransactions[currentUser].push({ desc: `Redeemed ${option.name}`, points: `-${option.cost}` });
+                        showToast(`Successfully redeemed ${option.name}!`, 'success');
+                        renderRedeemPointsPage(); // Re-render to update balance and history
+                    } else {
+                        showToast(`Not enough Eco-Points to redeem ${option.name}.`, 'info');
+                    }
+                };
+            });
+        }
+
 
         // --- VolunteerHubPage ---
         function renderVolunteerHubPage() {
             const mainContent = document.getElementById('main-content');
             let eventsHtml = mockData.volunteerEvents.map(event => `
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                     <h4 class="text-lg font-bold text-slate-900">${event.title}</h4>
                     <p class="text-sm text-slate-500 mt-1">${event.type} &bull; ${event.date}</p>
                     <div class="flex justify-between items-center mt-4">
                         <p class="text-sm text-slate-500">${event.spots} spots left</p>
-                        <button class="register-btn bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition">Register</button>
+                        <button class="register-btn bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-emerald-700 transition game-button">Register</button>
                     </div>
                 </div>
             `).join('');
 
             let historyHtml = mockData.volunteerEvents.map((event, index) => `
-                <li class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                <li class="p-4 rounded-lg bg-slate-50 border border-slate-200 game-card">
                     <h4 class="text-lg font-semibold text-slate-800 mb-1">${event.title} <span class="text-sm text-slate-500 font-normal">(${event.date})</span></h4>
                     <p class="text-slate-700 text-sm">
                         <span class="font-medium">Contribution:</span> ${event.contribution}
@@ -1426,17 +1904,17 @@
             `).join('');
 
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Volunteer Hub</h2>
-                        <p class="text-lg text-slate-500 mt-1">The Volunteer Hub connects users with local environmental events. This module simulates fetching a list of upcoming events from the API. Users can interact by "registering" for an event, which demonstrates how a POST request would update the event's status for that user.</p>
+                        <p class="text-lg text-slate-500 mt-1">The Volunteer Hub connects users with local environmental events. This module simulates fetching a list of upcoming events from an API. Users can interact by "registering" for an event, which demonstrates how a POST request would update the event status for that user.</p>
                     </header>
                     <div id="volunteer-events-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         ${eventsHtml}
                     </div>
 
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                        <h3 class="text-xl font-bold text-slate-900 mb-4">Volunteer Activity History and Contributions</h3>
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Volunteer Activity History & Contribution</h3>
                         <ul class="space-y-4">
                             ${historyHtml}
                         </ul>
@@ -1446,7 +1924,7 @@
 
             document.querySelectorAll('.register-btn').forEach(button => {
                 button.onclick = (e) => {
-                    showToast('Registration successful! (Simulation only)', 'success');
+                    showToast('Successfully registered! (Simulated)', 'success');
                     e.target.textContent = 'Registered!';
                     e.target.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
                     e.target.classList.add('bg-gray-400');
@@ -1459,7 +1937,7 @@
         function renderLeaderboardPage() {
             const mainContent = document.getElementById('main-content');
             let smeTop3Html = mockData.smeLeaderboard.slice(0, 3).map((sme, index) => `
-                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-yellow-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'}">
+                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-yellow-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'} game-card">
                     ${index === 0 ? '<span class="absolute -top-3 -right-3 bg-yellow-400 text-yellow-900 font-bold px-3 py-1 rounded-full text-sm shadow-lg">👑 #1</span>' : ''}
                     <img src="${sme.logo}" alt="Logo of ${sme.name}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md mb-3" />
                     <h4 class="text-xl font-bold mb-1">${sme.name}</h4>
@@ -1469,7 +1947,7 @@
             `).join('');
 
             let smeListHtml = mockData.smeLeaderboard.slice(3).map(sme => `
-                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50">
+                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 game-card">
                     <div class="flex items-center gap-4">
                         <span class="font-bold text-slate-500 w-6 text-center">${sme.rank}</span>
                         <span class="font-semibold text-slate-800">${sme.name}</span>
@@ -1479,7 +1957,7 @@
             `).join('');
 
             let cityTop3Html = mockData.cityLeaderboard.slice(0, 3).map((city, index) => `
-                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-blue-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'}">
+                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-blue-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'} game-card">
                     ${index === 0 ? '<span class="absolute -top-3 -right-3 bg-blue-400 text-blue-900 font-bold px-3 py-1 rounded-full text-sm shadow-lg">🏆 #1</span>' : ''}
                     <img src="${city.logo}" alt="Logo of ${city.name}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md mb-3" />
                     <h4 class="text-xl font-bold mb-1">${city.name}</h4>
@@ -1489,7 +1967,7 @@
             `).join('');
 
             let cityListHtml = mockData.cityLeaderboard.slice(3).map(city => `
-                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50">
+                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 game-card">
                     <div class="flex items-center gap-4">
                         <span class="font-bold text-slate-500 w-6 text-center">${city.rank}</span>
                         <span class="font-semibold text-slate-800">${city.name}</span>
@@ -1499,7 +1977,7 @@
             `).join('');
 
             let individualTop3Html = mockData.individualLeaderboard.slice(0, 3).map((individual, index) => `
-                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-purple-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'}">
+                <div class="flex flex-col items-center p-4 rounded-xl shadow-md transition-all duration-300 ${index === 0 ? 'bg-purple-500 text-white scale-105 relative -top-4' : 'bg-white text-slate-800'} game-card">
                     ${index === 0 ? '<span class="absolute -top-3 -right-3 bg-purple-400 text-purple-900 font-bold px-3 py-1 rounded-full text-sm shadow-lg">⭐ #1</span>' : ''}
                     <img src="${individual.avatar}" alt="Avatar of ${individual.name}" class="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md mb-3" />
                     <h4 class="text-xl font-bold mb-1">${individual.name}</h4>
@@ -1509,7 +1987,7 @@
             `).join('');
 
             let individualListHtml = mockData.individualLeaderboard.slice(3).map(individual => `
-                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50">
+                <li class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 game-card">
                     <div class="flex items-center gap-4">
                         <span class="font-bold text-slate-500 w-6 text-center">${individual.rank}</span>
                         <span class="font-semibold text-slate-800">${individual.name}</span>
@@ -1519,40 +1997,40 @@
             `).join('');
 
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8 flex justify-between items-center">
                         <h2 class="text-4xl font-bold text-slate-900">Leaderboard</h2>
-                        <button id="info-modal-btn" class="p-2 rounded-full bg-gray-100 text-slate-600 hover:bg-gray-200 transition-colors duration-200" aria-label="Leaderboard Information">
+                        <button id="info-modal-btn" class="p-2 rounded-full bg-gray-100 text-slate-600 hover:bg-gray-200 transition-colors duration-200 game-button" aria-label="Leaderboard Information">
                             ${getLucideIcon('Info', 24)}
                         </button>
                     </header>
-                    <p class="text-lg text-slate-500 mt-1 mb-8">View the top companies and cities based on their total green points.</p>
+                    <p class="text-lg text-slate-500 mt-1 mb-8">Organizations or cities associated with users will be ranked on a leaderboard based on the total eco-points accumulated by their members. See the top companies, cities, and individuals based on their total green points.</p>
 
                     <div id="info-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ${showInfoModal ? '' : 'hidden'}">
-                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative">
-                            <button id="close-info-modal-btn" class="absolute top-2 right-2 p-1 rounded-full bg-gray-100 hover:bg-gray-200">
+                        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full relative game-card">
+                            <button id="close-info-modal-btn" class="absolute top-2 right-2 p-1 rounded-full bg-gray-100 hover:bg-gray-200 game-button">
                                 ${getLucideIcon('X', 20)}
                             </button>
                             <h3 class="text-xl font-bold text-slate-900 mb-4">Leaderboard Information</h3>
                             <p class="text-slate-700">
-                                The leaderboard will be reset monthly. Top 3 will receive titles and members of the top 3 organizations will get exciting benefits!
+                                Leaderboards are reset monthly. The top 3 will receive titles, and members of the top 3 organizations will receive exciting benefits!
                             </p>
                         </div>
                     </div>
 
                     <div class="flex mb-6 space-x-4 border-b border-slate-200">
-                        <button data-leaderboard-type="organization" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'organization' ? 'bg-emerald-500 text-white' : 'hover:bg-slate-100 text-slate-700'}">
-                            Green Organization Leaderboard
+                        <button data-leaderboard-type="organization" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'organization' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
+                            Organization Leaderboard
                         </button>
-                        <button data-leaderboard-type="city" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'city' ? 'bg-emerald-500 text-white' : 'hover:bg-slate-100 text-slate-700'}">
-                            Green City Leaderboard
+                        <button data-leaderboard-type="city" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'city' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
+                            City Leaderboard
                         </button>
-                        <button data-leaderboard-type="individual" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'individual' ? 'bg-emerald-500 text-white' : 'hover:bg-slate-100 text-slate-700'}">
+                        <button data-leaderboard-type="individual" class="leaderboard-tab-btn px-4 py-2 text-lg font-medium rounded-t-lg transition-colors duration-200 ${currentLeaderboardSubView === 'individual' ? 'bg-emerald-500 text-white game-button' : 'hover:bg-slate-100 text-slate-700 game-button'}">
                             Individual Leaderboard
                         </button>
                     </div>
 
-                    <section id="leaderboard-content" class="mb-12 bg-gray-50 p-6 rounded-xl shadow-inner border border-gray-200 animate-fade-in">
+                    <section id="leaderboard-content" class="mb-12 bg-gray-50 p-6 rounded-xl shadow-inner border border-gray-200 animate-fade-in game-card">
                         <!-- Content will be injected here based on currentLeaderboardSubView -->
                     </section>
                 </div>
@@ -1583,8 +2061,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                         ${smeTop3Html}
                     </div>
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                        <h3 class="text-xl font-bold text-slate-900 mb-4">Green Organization Leaderboard</h3>
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">Organization Leaderboard</h3>
                         <ul class="space-y-2">
                             ${smeListHtml}
                         </ul>
@@ -1596,8 +2074,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                         ${cityTop3Html}
                     </div>
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
-                        <h3 class="text-xl font-bold text-slate-900 mb-4">Green City Leaderboard</h3>
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
+                        <h3 class="text-xl font-bold text-slate-900 mb-4">City Leaderboard</h3>
                         <ul class="space-y-2">
                             ${cityListHtml}
                         </ul>
@@ -1609,7 +2087,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
                         ${individualTop3Html}
                     </div>
-                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md">
+                    <div class="mt-8 bg-white p-6 rounded-xl border border-slate-200 shadow-md game-card">
                         <h3 class="text-xl font-bold text-slate-900 mb-4">Individual Leaderboard</h3>
                         <ul class="space-y-2">
                             ${individualListHtml}
@@ -1623,86 +2101,8 @@
         function renderInstructionsPage() {
             const mainContent = document.getElementById('main-content');
 
+            // Removed 'vi' option and simplified to 'en' only
             const multilingualInstructions = {
-                'vi': {
-                    title: "Hướng dẫn sử dụng ứng dụng GreenMo",
-                    description: "Dưới đây là hướng dẫn chi tiết về cách bạn có thể tương tác với các tính năng chính trong ứng dụng:",
-                    sections: [
-                        {
-                            title: "1. Điều hướng trong ứng dụng",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2 2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>',
-                            description: `
-                                <p class="mb-2"><strong>Chọn người dùng:</strong> Ở phía bên trái, dưới thanh điều hướng, bạn sẽ thấy một hộp chọn có nhãn "Simulated User" (Người dùng mô phỏng). Bạn có thể chọn giữa "Jane Doe", "John Smith" và "Alex Ray" để xem ứng dụng hoạt động như thế nào với dữ liệu của các người dùng khác nhau.</p>
-                                <p><strong>Chuyển đổi giữa các tab:</strong> Sử dụng các nút điều hướng ở thanh bên trái (ví dụ: "Home", "Dashboard", "Eco-Points System", v.v.) để chuyển đổi giữa các phần khác nhau của ứng dụng.</p>
-                            `
-                        },
-                        {
-                            title: "2. Mở khóa Báo cáo Carbon cao cấp (dành cho SME)",
-                            icon: '<svg xmlns="http://www.w3.org/2000/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>',
-                            description: `
-                                <p class="mb-2">Tính năng này có sẵn trong tab "Dashboard" (Bảng điều khiển).</p>
-                                <ul class="list-disc list-inside space-y-1">
-                                    <li><strong>Chọn "Jane Doe":</strong> Đảm bảo bạn đã chọn "Jane Doe" trong hộp chọn "Simulated User" ở thanh bên trái, vì người dùng này đã được cấu hình để có đủ "Green Badges" (Huy hiệu Xanh) để mở khóa báo cáo cao cấp.</li>
-                                    <li><strong>Truy cập Dashboard:</strong> Nhấp vào "Dashboard" trong thanh điều hướng bên trái.</li>
-                                    <li><strong>Mở khóa báo cáo:</strong> Cuộn xuống phần "Premium Carbon Report for SMEs" (Báo cáo Carbon cao cấp cho SME). Bạn sẽ thấy nút "Unlock Premium Report" (Mở khóa Báo cáo cao cấp). Nhấp vào nút này.</li>
-                                    <li><strong>Xem các loại báo cáo:</strong> Sau khi nhấp, bạn sẽ thấy thông báo "Premium Report Access Granted!" (Quyền truy cập Báo cáo cao cấp đã được cấp!) và một danh sách các báo cáo cao cấp có sẵn, bao gồm mô tả ngắn gọn và giá của chúng.</li>
-                                </ul>
-                            `
-                        },
-                        {
-                            title: "3. Kiếm Eco-Points (Điểm sinh thái)",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>',
-                            description: `
-                                <p class="mb-2">Bạn có thể tìm thấy các phương pháp kiếm điểm này trong tab "Eco-Points System" (Hệ thống Eco-Point). Nhấp vào "Eco-Points System" trong thanh điều hướng bên trái.</p>
-                                <h4 class="font-semibold text-slate-800 mb-1">Thanh toán bằng MoMo tại các nhà hàng được xếp hạng xanh:</h4>
-                                <p class="text-slate-700 text-sm mb-3">Đây là một phương pháp kiếm điểm tự động. Khi bạn thực hiện thanh toán qua MoMo tại các nhà hàng hoặc doanh nghiệp được GreenMo công nhận là "Xanh", điểm Eco-Point sẽ được cộng tự động vào số dư của bạn. Không cần hành động thủ công nào trong ứng dụng để mô phỏng điều này; nó được giả định là xảy ra trong nền thông qua các giao dịch MoMo.</p>
-                                <h4 class="font-semibold text-slate-800 mb-1">Theo dõi khoảng cách đi bộ/đạp xe:</h4>
-                                <ul class="list-disc list-inside space-y-1 mb-3">
-                                    <li><strong>Bước 1: Bắt đầu theo dõi:</strong> Nhấp vào nút "Start Tracking" (Bắt đầu theo dõi) trong phần "Track Walking/Cycling Distance" (Theo dõi khoảng cách đi bộ/đạp xe). Bạn sẽ thấy khoảng cách (km) bắt đầu tăng lên.</li>
-                                    <li><strong>Bước 2: Dừng theo dõi:</strong> Khi bạn muốn dừng, nhấp vào nút "Stop Tracking" (Dừng theo dõi). Ứng dụng sẽ tính toán điểm Eco-Point bạn kiếm được dựa trên khoảng cách đã đi và cộng vào số dư của bạn.</li>
-                                </ul>
-                                <h4 class="font-semibold text-slate-800 mb-1">Quét QR cho các hành động thân thiện với môi trường:</h4>
-                                <p class="text-slate-700 text-sm mb-2">Kiếm Eco-Points bằng cách xác minh các hành động thân thiện với môi trường của bạn. Phần này được chia thành hai loại:</p>
-                                <ul class="list-disc list-inside space-y-1 ml-4">
-                                    <li><strong>Xác minh chai/túi tái sử dụng (Giới hạn: 2 lần/ngày):</strong>
-                                        <ul class="list-circle list-inside ml-4">
-                                            <li><strong>Bước 1: Tải ảnh lên:</strong> Trong phần "Reusable Bottle/Bag Verification" (Xác minh chai/túi tái sử dụng), nhấp vào "Choose File" (Chọn tệp) và chọn một hình ảnh từ thiết bị của bạn (mô phỏng việc chụp ảnh chai/túi của bạn). Hình ảnh sẽ xuất hiện trong phần xem trước.</li>
-                                            <li><strong>Bước 2: Mô phỏng quét QR:</strong> Sau khi ảnh được tải lên, nút "Simulate Scan (Reusable Item)" (Mô phỏng quét (Vật phẩm tái sử dụng)) sẽ được kích hoạt (trừ khi bạn đã đạt giới hạn 2 lần/ngày). Nhấp vào nút này để kiếm điểm.</li>
-                                            <li><em>Lưu ý: Bạn chỉ có thể kiếm điểm từ hành động này tối đa 2 lần mỗi ngày.</em></li>
-                                        </ul>
-                                    </li>
-                                    <li><strong>Phân loại rác (Không giới hạn):</strong>
-                                        <ul class="list-circle list-inside ml-4">
-                                            <li><strong>Bước 1: Mô phỏng quét rác:</strong> Trong phần "Waste Sorting" (Phân loại rác), nhấp vào nút "Simulate Scan Waste" (Mô phỏng quét rác). Ứng dụng sẽ mô phỏng việc xác định loại rác (ví dụ: nhựa, giấy) và hiển thị nó.</li>
-                                            <li><strong>Bước 2: Mô phỏng quét QR thùng rác:</strong> Sau khi loại rác được xác định, nút "Simulate Scan Bin QR" (Mô phỏng quét QR thùng rác) sẽ được kích hoạt. Nhấp vào nút này để xác nhận bạn đã phân loại rác đúng cách và kiếm điểm Eco-Point.</li>
-                                            <li><em>Lưu ý: Bạn có thể thực hiện hành động này không giới hạn số lần mỗi ngày.</em></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            `
-                        },
-                        {
-                            title: "4. Theo dõi Carbon",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
-                            description: "Trực quan hóa tác động môi trường tích cực của bạn thông qua các biểu đồ tiết kiệm CO2. Bạn có thể xem dữ liệu hàng tuần hoặc hàng tháng."
-                        },
-                        {
-                            title: "5. Trung tâm trao đổi",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>',
-                            description: "Duyệt và trao đổi các vật phẩm đã qua sử dụng. Tính năng này thúc đẩy nền kinh tế tuần hoàn bằng cách kết nối người dùng để trao đổi vật phẩm."
-                        },
-                        {
-                            title: "6. Trung tâm tình nguyện",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>',
-                            description: "Kết nối bạn với các sự kiện môi trường địa phương. Bạn có thể xem các sự kiện sắp tới và đăng ký tham gia."
-                        },
-                        {
-                            title: "7. Bảng xếp hạng",
-                            icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>',
-                            description: "Xem thứ hạng của bạn, cũng như các tổ chức và thành phố, dựa trên tổng số điểm xanh. Khuyến khích cạnh tranh lành mạnh và sự tham gia."
-                        }
-                    ]
-                },
                 'en': {
                     title: "GreenMo App Instructions",
                     description: "Here's a detailed guide on how you can interact with the main features in the app:",
@@ -1724,7 +2124,13 @@
                                     <li><strong>Select "Jane Doe":</strong> Ensure you have "Jane Doe" selected in the "Simulated User" dropdown on the left sidebar, as this user is configured to have enough "Green Badges" to unlock the premium report.</li>
                                     <li><strong>Access Dashboard:</strong> Click on "Dashboard" in the left navigation bar.</li>
                                     <li><strong>Unlock Report:</strong> Scroll down to the "Premium Carbon Report for SMEs" section. You will see an "Unlock Premium Report" button. Click on it.</li>
-                                    <li><strong>View Report Types:</strong> After clicking, you will see a "Premium Report Access Granted!" message and a list of available premium reports, including their brief descriptions and prices.</li>
+                                    <li><strong>View Report Types:</strong> After clicking, you will see a "Premium Report Access Granted!" message and a list of available premium reports, including their brief descriptions and prices.
+                                        <ul class="list-circle list-inside ml-4 mt-2">
+                                            ${mockData.organization.premiumReports.map(report => `
+                                                <li><strong>${report.title}:</strong> ${report.purpose}</li>
+                                            `).join('')}
+                                        </ul>
+                                    </li>
                                 </ul>
                             `
                         },
@@ -1732,7 +2138,7 @@
                             title: "3. Earn Eco-Points",
                             icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01" /></svg>',
                             description: `
-                                <p class="mb-2">You can find these earning methods in the "Eco-Points System" tab. Click on "Eco-Points System" in the left navigation bar.</p>
+                                <p class="mb-2">You can find these earning methods in the "Eco-Points System" tab under the "Your Activities" sub-tab. Click on "Eco-Points System" in the left navigation bar, then select the "Your Activities" sub-tab.</p>
                                 <h4 class="font-semibold text-slate-800 mb-1">Pay with MoMo at Green-rated Restaurants:</h4>
                                 <p class="text-slate-700 text-sm mb-3">This is an automatic earning method. When you make payments via MoMo at restaurants and businesses officially recognized as 'Green' by GreenMo, Eco-Points will be automatically added to your balance. No manual action is needed in the app to simulate this; it's assumed to happen in the background via MoMo transactions.</p>
                                 <h4 class="font-semibold text-slate-800 mb-1">Track Walking/Cycling Distance:</h4>
@@ -1761,24 +2167,44 @@
                             `
                         },
                         {
-                            title: "4. Carbon Tracker",
+                            title: "4. Daily Challenges",
+                            icon: getLucideIcon('CalendarCheck', 20),
+                            description: `
+                                <p class="mb-2">You can find this feature in the "Eco-Points System" tab under the "Daily Challenges" sub-tab. Click on "Eco-Points System" in the left navigation bar, then select the "Daily Challenges" sub-tab.</p>
+                                <p class="mb-3">Complete these time-limited challenges to earn extra Eco-Points.</p>
+                                <ul class="list-disc list-inside space-y-1 ml-4">
+                                    <li><strong>Complete a Challenge:</strong> Each challenge will show its title, description, points, and time left. Click the "Complete Challenge" button to simulate completing it and receive your points.</li>
+                                    <li><em>Note: Completed challenges will be disabled.</em></li>
+                                </ul>
+                            `
+                        },
+                        {
+                            title: "5. Redeem Eco-Points",
+                            icon: getLucideIcon('Gift', 20),
+                            description: `
+                                <p class="mb-2">You can find this feature in the new "Redeem Points" tab. Click on "Redeem Points" in the left navigation bar.</p>
+                                <p>Here, you can view your Eco-Points balance and browse through available rewards. Click the "Redeem Now" button on any reward you wish to simulate redemption.</p>
+                            `
+                        },
+                        {
+                            title: "6. Carbon Tracker",
                             icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
                             description: "Visualize your positive environmental impact through CO2 savings charts. You can view data on a weekly or monthly basis."
                         },
                         {
-                            title: "5. Trading Hub",
+                            title: "7. Trading Hub",
                             icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>',
                             description: "Browse and exchange pre-loved items. This feature promotes a circular economy by connecting users for item swaps."
                         },
                         {
-                            title: "6. Volunteer Hub",
+                            title: "8. Volunteer Hub",
                             icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>',
                             description: "Connects you with local environmental events. You can view upcoming events and register to participate."
                         },
                         {
-                            title: "7. Leaderboard",
+                            title: "9. Leaderboard",
                             icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>',
-                            description: "View your ranking, as well as organizations and cities, based on total green points. Encourages healthy competition and engagement."
+                            description: "Organizations or cities associated with users will be ranked on a leaderboard based on the total eco-points accumulated by their members. See your ranking, as well as organizations and cities, based on total green points. Encourages healthy competition and engagement."
                         }
                     ]
                 }
@@ -1787,8 +2213,8 @@
             const currentContent = multilingualInstructions[currentLanguage];
 
             let instructionsHtml = currentContent.sections.map(item => `
-                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md flex items-start gap-4 animate-fade-in">
-                    <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-md flex items-start gap-4 animate-fade-in game-card">
+                    <div class="flex-shrink-0 p-3 bg-emerald-50 rounded-full text-emerald-600 shadow-md">
                         ${item.icon}
                     </div>
                     <div>
@@ -1799,13 +2225,10 @@
             `).join('');
 
             mainContent.innerHTML = `
-                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto">
+                <div class="bg-white p-8 md:p-12 rounded-2xl shadow-xl max-w-4xl w-full mx-auto game-card">
                     <header class="mb-8 flex justify-between items-center">
                         <h2 class="text-4xl font-bold text-slate-900">${currentContent.title}</h2>
-                        <select id="language-selector" class="p-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500">
-                            <option value="vi" ${currentLanguage === 'vi' ? 'selected' : ''}>Tiếng Việt</option>
-                            <option value="en" ${currentLanguage === 'en' ? 'selected' : ''}>English</option>
-                        </select>
+                        <!-- Removed language selector as per user request to make everything English -->
                     </header>
                     <p class="text-lg text-slate-500 mt-1 mb-8">${currentContent.description}</p>
                     <div class="flex flex-col gap-6">
@@ -1814,11 +2237,7 @@
                 </div>
             `;
 
-            // Attach event listener for language selector
-            document.getElementById('language-selector').onchange = (e) => {
-                currentLanguage = e.target.value;
-                renderInstructionsPage(); // Re-render the page with new language
-            };
+            // Removed event listener for language selector
         }
 
         // --- Main App Logic ---
@@ -1839,6 +2258,9 @@
                 case 'points':
                     renderEcoPointsPage();
                     break;
+                case 'redeem':
+                    renderRedeemPointsPage();
+                    break;
                 case 'volunteer':
                     renderVolunteerHubPage();
                     break;
@@ -1857,12 +2279,52 @@
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('toggle-sidebar-btn').onclick = toggleSidebar;
             document.getElementById('user-selector').onchange = handleUserChange;
+            document.getElementById('search-input').onclick = () => {
+                document.getElementById('search-suggestions-modal').classList.remove('hidden');
+                renderPromotions('promotions-grid'); // Call renderPromotions with the correct ID for the search modal
+            };
+            document.getElementById('close-search-suggestions-modal-btn').onclick = () => {
+                document.getElementById('search-suggestions-modal').classList.add('hidden');
+            };
             renderApp();
         });
 
         function renderApp() {
             updateSidebar(); // Render sidebar initially based on isSidebarOpen
             renderPageContent(); // Render the current page content
+            updateProfileInfo(); // Initial update of profile info in top bar
+        }
+
+        // Modified renderPromotions function to be self-contained
+        function renderPromotions(targetGridId = 'promotions-grid') {
+            const promotionsGrid = document.getElementById(targetGridId);
+            if (!promotionsGrid) {
+                console.error(`Promotion grid with ID ${targetGridId} not found.`);
+                return;
+            }
+
+            let promotionsHtml = mockData.promotions.map(promo => `
+                <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden transform hover:scale-105 transition-transform duration-200 cursor-pointer game-card">
+                    <img src="${promo.image}" alt="${promo.title}" class="w-full h-32 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/150x100/E0F2F7/000000?text=Promo';">
+                    <div class="p-3">
+                        <h4 class="font-semibold text-slate-900 text-sm mb-1">${promo.title}</h4>
+                        <p class="text-xs text-slate-600 mb-2">${promo.description}</p>
+                        <p class="text-xs text-slate-500">${promo.views}</p>
+                    </div>
+                </div>
+            `).join('');
+            promotionsGrid.innerHTML = promotionsHtml;
+
+            // Add click listeners to promotion cards
+            promotionsGrid.querySelectorAll('.bg-white.rounded-lg').forEach(card => {
+                card.onclick = () => {
+                    showToast('Clicked on a promotion! (Simulated)', 'info');
+                    // Only close the modal if it's the search suggestions modal
+                    if (targetGridId === 'promotions-grid') {
+                        document.getElementById('search-suggestions-modal').classList.add('hidden');
+                    }
+                };
+            });
         }
     </script>
 </body>
